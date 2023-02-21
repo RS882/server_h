@@ -25,7 +25,6 @@ describe('/phone_number', () => {
 	});
 
 	it('should return 405 when POST used ', async () => {
-		// const date: CreatePhoneNumberModel = { phoneNumber: '12345678489' };
 		await request(app)
 			.post('/phone_number')
 			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText('POST'))
@@ -51,7 +50,7 @@ describe('/phone_number', () => {
 
 	it('should return 405 when DELETE used  when there is a URI parameter', async () => {
 		await request(app)
-			.delete('/phone_number/ksksjsjj11818')
+			.delete('/phone_number/ksksuuuiijsjj11818')
 			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText('DELETE'))
 	});
 
