@@ -3,8 +3,9 @@ import { dbPhoneNumber, ITelNumer } from "../db/db";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
 import { APINotAllowMethodModel } from "../models/APINotAllowMethodModel";
 import { APIPhoneNumberModel } from "../models/APIPhoneNumberModel";
-import { RequestWithBody, RequestWithBodyAndBody, RequestWithQuery } from "../types";
+import { RequestWithQuery } from "../types";
 import { QueryPhoneNumberModel } from './../models/QueryPhoneNumberModel';
+import { API_METHODS } from './../API_Methods/APIMethods';
 
 
 const getAPIPhoneNumberModel = (db: ITelNumer): APIPhoneNumberModel => ({
@@ -13,34 +14,22 @@ const getAPIPhoneNumberModel = (db: ITelNumer): APIPhoneNumberModel => ({
 
 const getMethodNotAllowdText = (method: string): string => `The request method ${method} is inappropriate for this URL`;
 
+const dbTNum: ITelNumer = dbPhoneNumber;
+
 export const phoneNumberController = {
-	db: dbPhoneNumber,
+
 	get: (req: RequestWithQuery<QueryPhoneNumberModel>,
 		res: Response<APIPhoneNumberModel>) => {
-		res.json(getAPIPhoneNumberModel(phoneNumberController.db));
+		res.json(getAPIPhoneNumberModel(dbTNum));
 	},
 	post: (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).send(getMethodNotAllowdText('POST'));
+		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
 	},
 	put: (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).send(getMethodNotAllowdText('PUT'))
+		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT))
 	},
 	delete: (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).send(getMethodNotAllowdText('DELETE'))
+		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.DELETE))
 	},
 }
 
-
-	// usersRouter.post('/', (req: RequestWithBody<CreateUserModel>, res: Response<APIUserModel>) => {
-	// 	if (!req.body.userName || req.body.userName!.split('').filter((e) => e !== ' ').length <= 0) {
-	// 		res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-	// 		return;
-	// 	};
-	// 	const newUser: IUser = {
-	// 		id: +(new Date()),
-	// 		userName: req.body.userName,
-	// 		orderCount: 0,
-	// 	};
-	// 	db.users.push(newUser);
-	// 	res.status(HTTP_STATUSES.CREATED_201).json(getAPIUserModel(newUser));
-	// });
