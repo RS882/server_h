@@ -20,7 +20,11 @@ export const phoneNumberController = {
 
 	get: (req: RequestWithQuery<QueryPhoneNumberModel>,
 		res: Response<APIPhoneNumberModel>) => {
-		res.json(getAPIPhoneNumberModel(dbTNum));
+		res
+			// .setHeader('Access-Control-Allow-Origin', '*')
+			.json(getAPIPhoneNumberModel(dbTNum));
+
+
 	},
 	post: (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPhoneNumberRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const phoheNumberCntroller_1 = require("../Controller/phoheNumberCntroller");
-const getPhoneNumberRouter = (db) => {
+const getPhoneNumberRouter = () => {
     const phoneNumberRouter = express_1.default.Router();
     phoneNumberRouter.get('/', phoheNumberCntroller_1.phoneNumberController.get);
     phoneNumberRouter.get('/:id', phoheNumberCntroller_1.phoneNumberController.get);

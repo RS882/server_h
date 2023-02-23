@@ -4,7 +4,7 @@ export interface ITelNumer {
 };
 
 export const dbPhoneNumber: ITelNumer = {
-	phoneNumber: '012345678901',
+	phoneNumber: '999345646901',
 };
 
 

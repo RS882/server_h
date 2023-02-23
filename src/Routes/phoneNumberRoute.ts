@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { phoneNumberController } from '../Controller/phoheNumberCntroller';
 import { ITelNumer } from '../db/db';
 
@@ -7,7 +8,10 @@ import { ITelNumer } from '../db/db';
 
 export const getPhoneNumberRouter = () => {
 
+
 	const phoneNumberRouter = express.Router();
+
+
 
 	phoneNumberRouter.get('/', phoneNumberController.get);
 	phoneNumberRouter.get('/:id', phoneNumberController.get);
