@@ -2,7 +2,6 @@
 import { app } from "./app";
 
 const PORT = 4010;
-
 const port = PORT;
 
 

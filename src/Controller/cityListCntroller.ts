@@ -1,26 +1,24 @@
 import { Request, Response } from "express";
-import { dbPhoneNumber, ITelNumer } from "../db/db";
+import { cityList, CitysList, dbCitysList } from "../db/db";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
 import { APINotAllowMethodModel } from "../models/APINotAllowMethodModel";
-import { APIPhoneNumberModel } from "../models/APIPhoneNumberModel";
-import { RequestWithQuery } from "../types";
-import { QueryPhoneNumberModel } from './../models/QueryPhoneNumberModel';
+
 import { API_METHODS } from './../API_Methods/APIMethods';
+import { APICitysListModel } from "../models/APICitysListModel";
+import { ICitysList } from './../db/db';
 
 
-const getAPIPhoneNumberModel = (db: ITelNumer): APIPhoneNumberModel => ({
-	phoneNumber: db.phoneNumber,
-});
+const getAPICitysListModel = (db: ICitysList): APICitysListModel => ({ citysList: db.citysList });
 
 const getMethodNotAllowdText = (method: string): string => `The request method ${method} is inappropriate for this URL`;
 
-const dbTNum: ITelNumer = dbPhoneNumber;
+const dbCitys: ICitysList = dbCitysList;
 
-export const phoneNumberController = {
+export const citysListController = {
 
-	get: (req: RequestWithQuery<QueryPhoneNumberModel>,
-		res: Response<APIPhoneNumberModel>) => {
-		res.json(getAPIPhoneNumberModel(dbTNum));
+	get: (req: Request,
+		res: Response<APICitysListModel>) => {
+		res.json(getAPICitysListModel(dbCitys));
 	},
 	post: (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
