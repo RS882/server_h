@@ -21,8 +21,8 @@ app.use(corsMiddleware);
 app.options('*', corsMiddleware);
 
 
-app.use('/phone_number', getPhoneNumberRouter());
-app.use('/citys_list', getCityListRouter());
+app.use('/phone_number', getPhoneNumberRouter(dbPhoneNumber));
+app.use('/citys_list', getCityListRouter(dbCitysList));
 app.use('/__test__', getTestsRouter(dbPhoneNumber, dbCitysList));
 
 

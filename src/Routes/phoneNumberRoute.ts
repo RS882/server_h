@@ -1,13 +1,14 @@
 import express from 'express';
 import { phoneNumberController } from '../Controller/phoheNumberCntroller';
+import { ITelNumer } from '../db/db';
 
-export const getPhoneNumberRouter = () => {
+export const getPhoneNumberRouter = (db: ITelNumer) => {
 
 
 	const phoneNumberRouter = express.Router();
 
-	phoneNumberRouter.get('/', phoneNumberController.get);
-	phoneNumberRouter.get('/:id', phoneNumberController.get);
+	phoneNumberRouter.get('/', (req, res) => phoneNumberController.get(req, res, db));
+	phoneNumberRouter.get('/:id', (req, res) => phoneNumberController.get(req, res, db));
 	phoneNumberRouter.post('/', phoneNumberController.post);
 	phoneNumberRouter.put('/:id', phoneNumberController.put);
 	phoneNumberRouter.put('/', phoneNumberController.put);
