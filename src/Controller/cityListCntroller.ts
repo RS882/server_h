@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { cityList, CitysList, dbCitysList } from "../db/db";
+import { dbCitysList } from "../db/db";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
 import { APINotAllowMethodModel } from "../models/APINotAllowMethodModel";
 
@@ -11,7 +11,7 @@ import { getMethodNotAllowdText } from "../Utilite/function";
 
 const getAPICitysListModel = (db: ICitysList): APICitysListModel => ({ citysList: db.citysList });
 
-const dbCitys: ICitysList = dbCitysList;
+
 
 export const citysListController = {
 

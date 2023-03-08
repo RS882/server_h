@@ -96,6 +96,19 @@ export type CityListType = keyof typeof CityList;
 
 export type CitysList = CityListType[];
 
+export interface IRequestCall {
+	id: number;
+	userName: string;
+	phoneNumber: string;
+};
+
+export interface IdbRequestCall {
+	requestCall: IRequestCall[];
+};
+
+
+//--------------------------------------------------------------------
+
 export const dbPhoneNumber: ITelNumer = {
 	phoneNumber: '299945646901',
 };
@@ -183,7 +196,11 @@ export const cityList: CitysList = ["Berlin",
 	"Kaiserslautern",]
 
 export const dbCitysList: ICitysList = {
-	citysList: cityList
+	citysList: cityList,
+};
+
+export const dbRequestCall: IdbRequestCall = {
+	requestCall: [],
 };
 
 
