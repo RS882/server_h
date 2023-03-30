@@ -8,27 +8,30 @@ import { API_METHODS } from './../API_Methods/APIMethods';
 import { getMethodNotAllowdText } from "../Utilite/function";
 
 
-const getAPIPhoneNumberModel = (db: ITelNumer): APIPhoneNumberModel => ({
-	phoneNumber: db.phoneNumber,
-});
+
+class PhoneNumberController {
 
 
 
-export const phoneNumberController = {
+	_getAPIPhoneNumberModel = (bd: ITelNumer): APIPhoneNumberModel => ({
+		phoneNumber: bd.phoneNumber,
+	})
 
-	get: (req: Request,
-		res: Response<APIPhoneNumberModel>,
-		bd: ITelNumer) => {
-		res.json(getAPIPhoneNumberModel(bd));
-	},
-	post: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	get = (bd: ITelNumer) =>
+		async (req: Request,
+			res: Response<APIPhoneNumberModel>) => {
+			res.json(this._getAPIPhoneNumberModel(bd));
+		}
+	post = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
-	},
-	put: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	}
+	put = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT))
-	},
-	delete: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	}
+	delete = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.DELETE))
-	},
+	}
+
 }
 
+export const phoneNumberController = new PhoneNumberController();

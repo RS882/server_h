@@ -87,6 +87,10 @@ fetch('http://localhost:4010/request_call', { method: 'POST', body: JSON.stringi
 	.then(res => res.json())
 	.then(json => console.log(json))
 
+fetch('http://localhost:4010/request_call', { method: 'GET' })
+	.then(res => res.json())
+	.then(json => console.log(json))
+
 fetch('http://localhost:4010/phone_number/1', { method: 'DELETE' })
 	.then(res => res.json())
 	.then(json => console.log(json))

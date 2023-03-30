@@ -8,8 +8,8 @@ export const getCityListRouter = (db: ICitysList) => {
 
 	const cityListRouter = express.Router();
 
-	cityListRouter.get('/', (req, res) => citysListController.get(req, res, db));
-	cityListRouter.get('/:id', (req, res) => citysListController.get(req, res, db));
+	cityListRouter.get('/', citysListController.get(db));
+	cityListRouter.get('/:id', citysListController.get(db));
 	cityListRouter.post('/', citysListController.post);
 	cityListRouter.put('/:id', citysListController.put);
 	cityListRouter.put('/', citysListController.put);

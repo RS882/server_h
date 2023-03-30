@@ -7,8 +7,8 @@ export const getPhoneNumberRouter = (db: ITelNumer) => {
 
 	const phoneNumberRouter = express.Router();
 
-	phoneNumberRouter.get('/', (req, res) => phoneNumberController.get(req, res, db));
-	phoneNumberRouter.get('/:id', (req, res) => phoneNumberController.get(req, res, db));
+	phoneNumberRouter.get('/', phoneNumberController.get(db));
+	phoneNumberRouter.get('/:id', phoneNumberController.get(db));
 	phoneNumberRouter.post('/', phoneNumberController.post);
 	phoneNumberRouter.put('/:id', phoneNumberController.put);
 	phoneNumberRouter.put('/', phoneNumberController.put);

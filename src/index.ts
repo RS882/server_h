@@ -1,11 +1,9 @@
 
 import { app } from "./app";
 
-const PORT = 4010;
-const port = PORT;
+const PORT = process.env.PORT || 4010;// process.env.PORT пытаемся получить порт из системынх данных
 
+app.listen(+PORT, () => {
 
-app.listen(port, () => {
-
-	console.log(`Example app listening on port ${port}`);
+	console.log(`Example app listening on port ${PORT}`);
 }); 

@@ -8,13 +8,12 @@ const express_1 = __importDefault(require("express"));
 const requestCallCntroller_1 = require("../Controller/requestCallCntroller");
 const getRequestCallRouter = (db) => {
     const requsestCallRouter = express_1.default.Router();
-    requsestCallRouter.get('/', (req, res) => requestCallCntroller_1.requestCallController.get(req, res, db));
-    requsestCallRouter.get('/:id', (req, res) => requestCallCntroller_1.requestCallController.get(req, res, db));
-    requsestCallRouter.post('/', (req, res) => requestCallCntroller_1.requestCallController.post(req, res, db));
+    requsestCallRouter.get('/', requestCallCntroller_1.requestCallController.get(db));
+    requsestCallRouter.get('/:id', requestCallCntroller_1.requestCallController.get(db));
+    requsestCallRouter.post('/', requestCallCntroller_1.requestCallController.post(db));
     requsestCallRouter.put('/:id', requestCallCntroller_1.requestCallController.put);
     requsestCallRouter.put('/', requestCallCntroller_1.requestCallController.put);
-    requsestCallRouter.delete('/', requestCallCntroller_1.requestCallController.delete);
-    requsestCallRouter.delete('/:id', requestCallCntroller_1.requestCallController.delete);
+    requsestCallRouter.delete('/:id([0-9]+)', requestCallCntroller_1.requestCallController.delete(db));
     return requsestCallRouter;
 };
 exports.getRequestCallRouter = getRequestCallRouter;

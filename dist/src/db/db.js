@@ -94,13 +94,14 @@ var CityList;
 exports.dbPhoneNumber = {
     phoneNumber: '299945646901',
 };
-exports.cityList = ["Berlin",
+exports.cityList = [
+    // "Berlin",
     "Hamburg",
     "München",
-    "Köln",
-    "Frankfurt am Main",
-    "Stuttgart",
-    "Düsseldorf",
+    // "Köln",
+    // "Frankfurt am Main",
+    // "Stuttgart",
+    // "Düsseldorf",
     // "Dortmund",
     // "Essen",
     // "Leipzig",
@@ -174,7 +175,8 @@ exports.cityList = ["Berlin",
     // "Siegen",
     // "Hildesheim",
     // "Salzgitter",
-    "Kaiserslautern",];
+    "Kaiserslautern",
+];
 exports.dbCitysList = {
     citysList: exports.cityList,
 };

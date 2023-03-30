@@ -8,8 +8,8 @@ const express_1 = __importDefault(require("express"));
 const phoheNumberCntroller_1 = require("../Controller/phoheNumberCntroller");
 const getPhoneNumberRouter = (db) => {
     const phoneNumberRouter = express_1.default.Router();
-    phoneNumberRouter.get('/', (req, res) => phoheNumberCntroller_1.phoneNumberController.get(req, res, db));
-    phoneNumberRouter.get('/:id', (req, res) => phoheNumberCntroller_1.phoneNumberController.get(req, res, db));
+    phoneNumberRouter.get('/', phoheNumberCntroller_1.phoneNumberController.get(db));
+    phoneNumberRouter.get('/:id', phoheNumberCntroller_1.phoneNumberController.get(db));
     phoneNumberRouter.post('/', phoheNumberCntroller_1.phoneNumberController.post);
     phoneNumberRouter.put('/:id', phoheNumberCntroller_1.phoneNumberController.put);
     phoneNumberRouter.put('/', phoheNumberCntroller_1.phoneNumberController.put);

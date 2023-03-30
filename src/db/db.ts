@@ -113,13 +113,14 @@ export const dbPhoneNumber: ITelNumer = {
 	phoneNumber: '299945646901',
 };
 
-export const cityList: CitysList = ["Berlin",
+export const cityList: CitysList = [
+	// "Berlin",
 	"Hamburg",
 	"München",
-	"Köln",
-	"Frankfurt am Main",
-	"Stuttgart",
-	"Düsseldorf",
+	// "Köln",
+	// "Frankfurt am Main",
+	// "Stuttgart",
+	// "Düsseldorf",
 	// "Dortmund",
 	// "Essen",
 	// "Leipzig",

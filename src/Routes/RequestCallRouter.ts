@@ -10,12 +10,12 @@ export const getRequestCallRouter = (db: IdbRequestCall) => {
 
 	const requsestCallRouter = express.Router();
 
-	requsestCallRouter.get('/', (req, res) => requestCallController.get(req, res, db));
-	requsestCallRouter.get('/:id', (req, res) => requestCallController.get(req, res, db));
-	requsestCallRouter.post('/', (req, res) => requestCallController.post(req, res, db));
+	requsestCallRouter.get('/', requestCallController.get(db));
+	requsestCallRouter.get('/:id', requestCallController.get(db));
+	requsestCallRouter.post('/', requestCallController.post(db));
 	requsestCallRouter.put('/:id', requestCallController.put);
 	requsestCallRouter.put('/', requestCallController.put);
-	requsestCallRouter.delete('/:id([0-9]+)', (req, res) => requestCallController.delete(req, res, db));
+	requsestCallRouter.delete('/:id([0-9]+)', requestCallController.delete(db));
 
 	return requsestCallRouter;
 

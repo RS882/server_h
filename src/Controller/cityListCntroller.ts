@@ -9,25 +9,28 @@ import { ICitysList } from './../db/db';
 import { getMethodNotAllowdText } from "../Utilite/function";
 
 
-const getAPICitysListModel = (db: ICitysList): APICitysListModel => ({ citysList: db.citysList });
 
 
+class CitysListController {
 
-export const citysListController = {
 
-	get: (req: Request,
-		res: Response<APICitysListModel>,
-		db: ICitysList) => {
-		res.json(getAPICitysListModel(db));
-	},
-	post: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	_getAPICitysListModel = (db: ICitysList): APICitysListModel => ({ citysList: db.citysList })
+
+	get = (db: ICitysList) =>
+		async (req: Request,
+			res: Response<APICitysListModel>) => {
+			res.json(this._getAPICitysListModel(db));
+		}
+	post = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
-	},
-	put: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	}
+	put = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT))
-	},
-	delete: (req: Request, res: Response<APINotAllowMethodModel>) => {
+	}
+	delete = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.DELETE))
-	},
+	}
 }
+
+export const citysListController = new CitysListController();
 
