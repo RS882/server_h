@@ -13,10 +13,13 @@ exports.citysListController = void 0;
 const HTTP_Status_1 = require("../HTTP_Status/HTTP_Status");
 const APIMethods_1 = require("./../API_Methods/APIMethods");
 const function_1 = require("../Utilite/function");
+const citysListService_1 = require("./../service/citysListService");
 class CitysListController {
     constructor() {
         this._getAPICitysListModel = (db) => ({ citysList: db.citysList });
         this.get = (db) => (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const res11 = yield citysListService_1.cityListService.get();
+            console.log(res11);
             res.json(this._getAPICitysListModel(db));
         });
         this.post = (req, res) => __awaiter(this, void 0, void 0, function* () {

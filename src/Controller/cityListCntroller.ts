@@ -8,6 +8,7 @@ import { APICitysListModel } from "../models/APIModels/APICitysListModel";
 import { ICitysList } from '../db/types';
 import { getMethodNotAllowdText } from "../Utilite/function";
 import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
+import { cityListService } from './../service/citysListService';
 
 
 
@@ -20,6 +21,9 @@ class CitysListController {
 	get = (db: ICitysList) =>
 		async (req: Request,
 			res: Response<APICitysListModel>) => {
+			const res11 = await cityListService.get();
+			console.log(res11);
+
 			res.json(this._getAPICitysListModel(db));
 		}
 	post = async (req: Request, res: Response<APINotAllowMethodModel>) => {

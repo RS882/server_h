@@ -10,7 +10,7 @@ class PhoneNumberService {
 	_getAPIPhoneNumberModel = (bd?: SQLPhoneNumberMobel): APIPhoneNumberModel =>
 		({ phoneNumber: bd ? bd.tel_number : '', });
 
-	get = async (): Promise<APIPhoneNumberModel | undefined> => {
+	get = async (): Promise<APIPhoneNumberModel> => {
 		try {
 			const resSQL = await phoneNumberRepository.get();
 			if (resSQL.length === 0) return this._getAPIPhoneNumberModel();

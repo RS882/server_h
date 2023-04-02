@@ -46,3 +46,9 @@ INSERT INTO tel_number(tel_number, is_aktive) values ('778899009900',true);
 INSERT INTO tel_number(tel_number, is_aktive) values ('111111111111',true);
 INSERT INTO tel_number(tel_number, is_aktive) values ('0',true);
 INSERT INTO tel_number(tel_number, is_aktive) values ('qweqwer33344',true);
+
+
+INSERT INTO city (city_name , is_aktive) VALUES
+    ( 'Cheese', 9.99),
+    ( 'Bread', 1.99),
+   ('Milk', 2.99);

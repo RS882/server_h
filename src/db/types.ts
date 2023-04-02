@@ -1,11 +1,5 @@
-export type telNumber = string;
-export interface ITelNumer {
-	phoneNumber: telNumber;
-};
 
-export interface ICitysList {
-	citysList: CitysList
-};
+
 
 
 
@@ -94,13 +88,20 @@ enum CityList {
 };
 export type CityListType = keyof typeof CityList;
 
-export type CitysList = CityListType[];
+export type CitysList = string[];
+
+export interface ICitysList {
+	citysList: CitysList
+};
+
 
 export interface IRequestCall {
 	id: number;
 	userName: string;
 	phoneNumber: string;
 };
+
+
 
 export interface IdbRequestCall {
 	requestCall: IRequestCall[];

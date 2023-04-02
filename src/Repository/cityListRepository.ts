@@ -1,31 +1,27 @@
 
 import { db } from '../db/db';
 import { QueryResult, Pool } from 'pg';
-import { SQLPhoneNumberMobel } from '../models/SQLModels/SQLPhoneNumberMobel';
+
+import { SQLCitysListModel } from './../models/SQLModels/SQLCitysListModel';
 
 
-
-
-
-
-class PhoneNumberRepository {
+class CitysListRepository {
 	db: Pool;
 	query: {
 		text: string;
 		values: [boolean]
-	}
+	};
 
 	constructor(db_sql: Pool) {
 		this.db = db_sql;
 		this.query = {
-			text: 'SELECT id, tel_number FROM tel_number  where is_aktive = $1',
+			text: 'SELECT city_name FROM city where is_aktive = $1',
 			values: [true],
 		}
 	};
 	get = async () => {
 		try {
-			const res: QueryResult<SQLPhoneNumberMobel> = await db.query(this.query);
-
+			const res: QueryResult<SQLCitysListModel> = await db.query(this.query);
 			return res.rows;
 		} catch (error) {
 			console.log(error);
@@ -36,4 +32,4 @@ class PhoneNumberRepository {
 
 }
 
-export const phoneNumberRepository = new PhoneNumberRepository(db);
+export const citysListRepository = new CitysListRepository(db);
