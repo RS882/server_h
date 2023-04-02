@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { API_METHODS } from "../API_Methods/APIMethods";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
-import { APINotAllowMethodModel } from "../models/APINotAllowMethodModel";
+
 import { RequestWithBody } from "../types";
 import { getMethodNotAllowdText, isFormatedTelNumberCorrect } from "../Utilite/function";
 import { CreateRequestCallModel } from './../models/CreateRequestCall';
-import { APIRequestCallModel } from './../models/APIRequestCallModel';
+
 import { IdbRequestCall, IRequestCall } from "../db/db";
+import { APIRequestCallModel } from "../models/APIModels/APIRequestCallModel";
+import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
 
 
 
