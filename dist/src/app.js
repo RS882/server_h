@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
 const express_1 = __importDefault(require("express"));
-const db_1 = require("./db/db");
+const types_1 = require("./db/types");
 const cors_1 = __importDefault(require("cors"));
 const phoneNumberRoute_1 = require("./Routes/phoneNumberRoute");
 const testsRoutes_1 = require("./Routes/testsRoutes");
@@ -21,7 +21,7 @@ const corsOptions = {
 const corsMiddleware = (0, cors_1.default)(corsOptions);
 exports.app.use(corsMiddleware);
 exports.app.options('*', corsMiddleware);
-exports.app.use('/phone_number', (0, phoneNumberRoute_1.getPhoneNumberRouter)(db_1.dbPhoneNumber));
-exports.app.use('/citys_list', (0, cityListRoute_1.getCityListRouter)(db_1.dbCitysList));
-exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)(db_1.dbRequestCall));
-exports.app.use('/__test__', (0, testsRoutes_1.getTestsRouter)(db_1.dbPhoneNumber, db_1.dbCitysList, db_1.dbRequestCall));
+exports.app.use('/phone_number', (0, phoneNumberRoute_1.getPhoneNumberRouter)());
+exports.app.use('/citys_list', (0, cityListRoute_1.getCityListRouter)(types_1.dbCitysList));
+exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)(types_1.dbRequestCall));
+exports.app.use('/__test__', (0, testsRoutes_1.getTestsRouter)(types_1.dbCitysList, types_1.dbRequestCall));

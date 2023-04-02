@@ -1,14 +1,14 @@
 
 import express from 'express';
-import { ITelNumer } from '../db/db';
+
 
 import { HTTP_STATUSES } from '../HTTP_Status/HTTP_Status';
-import { ICitysList, IdbRequestCall } from './../db/db';
-import { db } from './../db/db_';
+import { ICitysList, IdbRequestCall } from '../db/types';
+import { db } from '../db/db';
 
 
 
-export const getTestsRouter = (dbTel: ITelNumer, dbCity: ICitysList, dbCall: IdbRequestCall) => {
+export const getTestsRouter = (dbCity: ICitysList, dbCall: IdbRequestCall) => {
 
 	const testRouter = express.Router();
 

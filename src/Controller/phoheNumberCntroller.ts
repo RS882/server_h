@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ITelNumer } from "../db/db";
+
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
 
 import { API_METHODS } from './../API_Methods/APIMethods';
@@ -12,11 +12,6 @@ import { phoneNumberService } from './../service/phoneNumberService';
 
 class PhoneNumberController {
 
-
-
-	_getAPIPhoneNumberModel = (bd: ITelNumer): APIPhoneNumberModel => ({
-		phoneNumber: bd.phoneNumber,
-	})
 
 	get = async (req: Request, res: Response<APIPhoneNumberModel>) => {
 		const resFromService = await phoneNumberService.get();

@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { dbCitysList } from "../db/db";
+import { dbCitysList } from "../db/types";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
 
 
 import { API_METHODS } from './../API_Methods/APIMethods';
 import { APICitysListModel } from "../models/APIModels/APICitysListModel";
-import { ICitysList } from './../db/db';
+import { ICitysList } from '../db/types';
 import { getMethodNotAllowdText } from "../Utilite/function";
 import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
 

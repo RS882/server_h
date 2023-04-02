@@ -19,6 +19,7 @@ class PhoneNumberService {
                 const resSQL = yield phoneNumbeRepository_1.phoneNumberRepository.get();
                 if (resSQL.length === 0)
                     return this._getAPIPhoneNumberModel();
+                yield resSQL.sort((a, b) => +a.id - b.id);
                 return resSQL.filter(e => { var _a; return !!e.tel_number && ((_a = e.tel_number.match(/\d/g)) === null || _a === void 0 ? void 0 : _a.length) === 12; })
                     .map(e => this._getAPIPhoneNumberModel(e))[0];
             }

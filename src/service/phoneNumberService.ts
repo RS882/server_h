@@ -1,8 +1,8 @@
-import { ITelNumer } from "../db/db";
+
 import { APIPhoneNumberModel } from "../models/APIModels/APIPhoneNumberModel";
 
 import { phoneNumberRepository } from "../Repository/phoneNumbeRepository";
-import { SQLPhoneNumberMobel } from '../Repository/SQLModels/SQLPhoneNumberMobel';
+import { SQLPhoneNumberMobel } from '../models/SQLModels/SQLPhoneNumberMobel';
 
 
 
@@ -14,6 +14,7 @@ class PhoneNumberService {
 		try {
 			const resSQL = await phoneNumberRepository.get();
 			if (resSQL.length === 0) return this._getAPIPhoneNumberModel();
+			await resSQL.sort((a, b) => +a.id - b.id);
 			return resSQL.filter(e => !!e.tel_number && e.tel_number.match(/\d/g)?.length === 12)
 				.map(e => this._getAPIPhoneNumberModel(e))[0];
 		} catch (error) {

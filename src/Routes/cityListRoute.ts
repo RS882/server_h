@@ -1,6 +1,6 @@
 import express from 'express';
 import { citysListController } from '../Controller/cityListCntroller';
-import { ICitysList } from '../db/db';
+import { ICitysList } from '../db/types';
 
 
 export const getCityListRouter = (db: ICitysList) => {

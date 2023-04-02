@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.phoneNumberRepository = void 0;
-const db_1 = require("./../db/db_");
+const db_1 = require("../db/db");
 class PhoneNumberRepository {
     constructor(db_sql) {
         this.get = () => __awaiter(this, void 0, void 0, function* () {
@@ -25,7 +25,7 @@ class PhoneNumberRepository {
         });
         this.db = db_sql;
         this.query = {
-            text: 'SELECT tel_number FROM tel_number  where is_aktive = $1',
+            text: 'SELECT id, tel_number FROM tel_number  where is_aktive = $1',
             values: [true],
         };
     }

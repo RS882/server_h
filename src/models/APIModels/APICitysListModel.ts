@@ -1,4 +1,4 @@
-import { CitysList } from "../../db/db";
+import { CitysList } from "../../db/types";
 
 export interface APICitysListModel {
 

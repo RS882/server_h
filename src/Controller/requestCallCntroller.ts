@@ -6,7 +6,7 @@ import { RequestWithBody } from "../types";
 import { getMethodNotAllowdText, isFormatedTelNumberCorrect } from "../Utilite/function";
 import { CreateRequestCallModel } from './../models/CreateRequestCall';
 
-import { IdbRequestCall, IRequestCall } from "../db/db";
+import { IdbRequestCall, IRequestCall } from "../db/types";
 import { APIRequestCallModel } from "../models/APIModels/APIRequestCallModel";
 import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
 

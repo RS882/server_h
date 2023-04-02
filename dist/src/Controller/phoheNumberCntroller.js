@@ -16,9 +16,6 @@ const function_1 = require("../Utilite/function");
 const phoneNumberService_1 = require("./../service/phoneNumberService");
 class PhoneNumberController {
     constructor() {
-        this._getAPIPhoneNumberModel = (bd) => ({
-            phoneNumber: bd.phoneNumber,
-        });
         this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const resFromService = yield phoneNumberService_1.phoneNumberService.get();
             res.json(resFromService);

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { requestCallController } from '../Controller/requestCallCntroller';
-import { IdbRequestCall } from './../db/db';
+import { IdbRequestCall } from '../db/types';
 
 
 
