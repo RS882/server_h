@@ -23,7 +23,7 @@ app.options('*', corsMiddleware);
 
 
 app.use('/phone_number', getPhoneNumberRouter());
-app.use('/citys_list', getCityListRouter(dbCitysList));
+app.use('/citys_list', getCityListRouter());
 app.use('/request_call', getRequestCallRouter(dbRequestCall));
 app.use('/__test__', getTestsRouter(dbCitysList, dbRequestCall));
 

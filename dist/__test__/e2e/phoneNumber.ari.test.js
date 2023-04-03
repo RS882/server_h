@@ -29,12 +29,12 @@ describe('/phone_number', () => {
         const renameTestDb = yield db_1.db.query(`ALTER TABLE tel_number_test RENAME TO tel_number;`);
     }));
     const getMethodNotAllowdText = (method) => `The request method ${method} is inappropriate for this URL`;
-    it('should return 200 and emty line ', () => __awaiter(void 0, void 0, void 0, function* () {
+    it('should return 200 and specified data ', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
             .get('/phone_number')
             .expect(HTTP_Status_1.HTTP_STATUSES.OK_200, { phoneNumber: testPhoneNumber });
     }));
-    it('should return 200 and emty line when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
+    it('should return 200 and specified data when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
             .get('/phone_number/isdio1020')
             .expect(HTTP_Status_1.HTTP_STATUSES.OK_200, { phoneNumber: testPhoneNumber });

@@ -17,10 +17,9 @@ const citysListService_1 = require("./../service/citysListService");
 class CitysListController {
     constructor() {
         this._getAPICitysListModel = (db) => ({ citysList: db.citysList });
-        this.get = (db) => (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const res11 = yield citysListService_1.cityListService.get();
-            console.log(res11);
-            res.json(this._getAPICitysListModel(db));
+        this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const resSQL = yield citysListService_1.cityListService.get();
+            res.json(resSQL);
         });
         this.post = (req, res) => __awaiter(this, void 0, void 0, function* () {
             res.status(HTTP_Status_1.HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end((0, function_1.getMethodNotAllowdText)(APIMethods_1.API_METHODS.POST));

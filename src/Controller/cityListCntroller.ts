@@ -18,14 +18,10 @@ class CitysListController {
 
 	_getAPICitysListModel = (db: ICitysList): APICitysListModel => ({ citysList: db.citysList })
 
-	get = (db: ICitysList) =>
-		async (req: Request,
-			res: Response<APICitysListModel>) => {
-			const res11 = await cityListService.get();
-			console.log(res11);
-
-			res.json(this._getAPICitysListModel(db));
-		}
+	get = async (req: Request, res: Response<APICitysListModel>) => {
+		const resSQL = await cityListService.get();
+		res.json(resSQL);
+	}
 	post = async (req: Request, res: Response<APINotAllowMethodModel>) => {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
 	}

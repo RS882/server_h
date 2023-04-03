@@ -25,13 +25,14 @@ describe('/phone_number', () => {
 
 	const getMethodNotAllowdText = (method: string): string => `The request method ${method} is inappropriate for this URL`;
 
-	it('should return 200 and emty line ', async () => {
+
+	it('should return 200 and specified data ', async () => {
 		await request(app)
 			.get('/phone_number')
 			.expect(HTTP_STATUSES.OK_200, { phoneNumber: testPhoneNumber })
 	});
 
-	it('should return 200 and emty line when there is a URI parameter', async () => {
+	it('should return 200 and specified data when there is a URI parameter', async () => {
 		await request(app)
 			.get('/phone_number/isdio1020')
 			.expect(HTTP_STATUSES.OK_200, { phoneNumber: testPhoneNumber })

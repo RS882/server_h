@@ -101,3 +101,13 @@ const addCityToSql = (cityArr = CityList, activeCity = activeCityCount) => {
     }));
 };
 exports.addCityToSql = addCityToSql;
+// beforeAll(async () => {
+// 	// const createTestDb = await db.query(`CREATE TABLE сtel_number_test AS TABLE tel_number;`);
+// 	// const cleareDb = await db.query(`TRUNCATE tel_number;`);
+// 	const addTestDataToDb =
+// 		const idTiredItem =await db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2); RETURNING id;`,['Geneva', true]);
+// });
+// afterAll(async () => {
+// 	const delDb = await db.query(`DROP TABLE IF EXISTS tel_number;`);
+// 	const renameTestDb = await db.query(`ALTER TABLE tel_number_test RENAME TO tel_number;`);
+// });
