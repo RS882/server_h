@@ -22,7 +22,7 @@ describe('/citys_list', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const createTestDb = yield db_1.db.query(`CREATE TABLE city_test AS TABLE city;`);
         const cleareDb = yield db_1.db.query(`TRUNCATE city;`);
-        const addTestDataToDb = yield db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2) RETURNING id;`, [testCityName, true]);
+        const addTestDataToDb = yield db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const delDb = yield db_1.db.query(`DROP TABLE IF EXISTS city;`);

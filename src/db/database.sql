@@ -31,6 +31,7 @@ INSERT INTO tel_number(tel_number, is_aktive) values ('098098098098',true);
 
 SELECT tel_number FROM tel_number;
 
+SELECT user_name,tel_number FROM request_call where is_not_processed = $1
 
 create TABLE tel_number(
 	id SERIAL PRIMARY KEY,
@@ -47,6 +48,16 @@ INSERT INTO tel_number(tel_number, is_aktive) values ('111111111111',true);
 INSERT INTO tel_number(tel_number, is_aktive) values ('0',true);
 INSERT INTO tel_number(tel_number, is_aktive) values ('qweqwer33344',true);
 
+INSERT INTO city(city_name , is_aktive) values ($1, $2) RETURNING id;
+
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Jhon','000098098098', true);
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Ivan','121212121212', false);
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Anna','343434343434', true);
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Mari','878787878878', true);
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Fred','989898989898', false);
+INSERT INTO request_call(user_name, tel_number, is_not_processed) values('Iva','565656556565', true);
+
+ SELECT * FROM request_call;
 
 INSERT INTO city (city_name , is_aktive) VALUES
     ( 'Cheese', 9.99),

@@ -14,7 +14,7 @@ describe('/citys_list', () => {
 		const createTestDb = await db.query(`CREATE TABLE city_test AS TABLE city;`);
 		const cleareDb = await db.query(`TRUNCATE city;`);
 		const addTestDataToDb =
-			await db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2) RETURNING id;`, [testCityName, true]);
+			await db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
 	});
 
 	afterAll(async () => {

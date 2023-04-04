@@ -3,12 +3,12 @@ import express from 'express';
 
 
 import { HTTP_STATUSES } from '../HTTP_Status/HTTP_Status';
-import { ICitysList, IdbRequestCall } from '../db/types';
-import { db } from '../db/db';
+import {  IdbRequestCall } from '../db/types';
 
 
 
-export const getTestsRouter = (dbCity: ICitysList, dbCall: IdbRequestCall) => {
+
+export const getTestsRouter = ( dbCall: IdbRequestCall) => {
 
 	const testRouter = express.Router();
 
@@ -33,11 +33,11 @@ export const getTestsRouter = (dbCity: ICitysList, dbCall: IdbRequestCall) => {
 
 	// });
 
-	testRouter.delete('/city', (req, res) => {
-		dbCity.citysList = [];
-		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+	// testRouter.delete('/city', (req, res) => {
+	// 	dbCity.citysList = [];
+	// 	res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 
-	});
+	// });
 	testRouter.delete('/call', (req, res) => {
 		dbCall.requestCall = [];
 		res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)

@@ -22,8 +22,6 @@ class CitysListRepository {
 	get = async () => {
 		try {
 			const res: QueryResult<SQLCitysListModel> = await db.query(this.query);
-		
-
 			return res.rows;
 		} catch (error) {
 			console.log(error);
@@ -31,6 +29,8 @@ class CitysListRepository {
 		}
 
 	};
+
+
 
 }
 

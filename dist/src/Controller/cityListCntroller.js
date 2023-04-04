@@ -16,7 +16,6 @@ const function_1 = require("../Utilite/function");
 const citysListService_1 = require("./../service/citysListService");
 class CitysListController {
     constructor() {
-        this._getAPICitysListModel = (db) => ({ citysList: db.citysList });
         this.get = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const resSQL = yield citysListService_1.cityListService.get();
             res.json(resSQL);

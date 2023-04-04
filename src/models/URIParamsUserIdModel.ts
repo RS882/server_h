@@ -1,7 +1,7 @@
-export interface URIParamsUserIdModel {
+export interface URIParamsRequestCallIdModel {
 	/**
-	  * ID of the existing 
+	  * ID of the existing request call
 	  
 	  */
-	id: string;
+	id: number;
 }

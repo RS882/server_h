@@ -9,6 +9,7 @@ import { CreateRequestCallModel } from './../models/CreateRequestCall';
 import { IdbRequestCall, IRequestCall } from "../db/types";
 import { APIRequestCallModel } from "../models/APIModels/APIRequestCallModel";
 import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
+import { URIParamsRequestCallIdModel } from "../models/URIParamsUserIdModel";
 
 
 
@@ -52,7 +53,7 @@ class RequestCallController {
 		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT));
 	};
 	delete = (db: IdbRequestCall) =>
-		async (req: Request, res: Response) => {
+		async (req: Request<URIParamsRequestCallIdModel>, res: Response) => {
 			if (!db.requestCall.map(e => e.id).includes(+req.params.id)) {
 				res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 				return;

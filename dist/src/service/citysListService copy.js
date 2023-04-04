@@ -9,26 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.citysListRepository = void 0;
-const db_1 = require("../db/db");
-class CitysListRepository {
-    constructor(db_sql) {
+exports.cityListService = void 0;
+const cityListRepository_1 = require("./../Repository/cityListRepository");
+class CityListService {
+    constructor() {
+        this._getAPICitysListModel = (db) => ({ citysList: db ? db.map(e => e.city_name) : [] });
         this.get = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                const res = yield db_1.db.query(this.query);
-                return res.rows;
+                const resSQL = yield cityListRepository_1.citysListRepository.get();
+                if (resSQL.length === 0)
+                    return this._getAPICitysListModel();
+                return this._getAPICitysListModel(resSQL);
             }
             catch (error) {
                 console.log(error);
-                return [];
+                return this._getAPICitysListModel();
             }
         });
-        this.db = db_sql;
-        this.query = {
-            text: 'SELECT city_name FROM city where is_aktive = $1',
-            values: [true],
-        };
     }
-    ;
 }
-exports.citysListRepository = new CitysListRepository(db_1.db);
+exports.cityListService = new CityListService();
