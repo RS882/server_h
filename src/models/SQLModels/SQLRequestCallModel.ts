@@ -2,7 +2,7 @@ export interface SQLRequestCallModel {
 	/**
  *Request call ID received from the database
  */
-	id: number;
+	id?: number;
 	/**
 	 * Name of user received from the database
 	 */

@@ -2,7 +2,7 @@ export interface APIRequestCallModel {
 	/**
 	 *Request call ID translated in response
 	 */
-	id: number;
+	id?: number;
 	/**
 	 * Name of user which order is a call
 	 */

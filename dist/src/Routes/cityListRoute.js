@@ -9,12 +9,12 @@ const cityListCntroller_1 = require("../Controller/cityListCntroller");
 const getCityListRouter = () => {
     const cityListRouter = express_1.default.Router();
     cityListRouter.get('/', cityListCntroller_1.citysListController.get);
-    cityListRouter.get('/:id', cityListCntroller_1.citysListController.get);
+    cityListRouter.get('/:id([0-9]+)', cityListCntroller_1.citysListController.get);
     cityListRouter.post('/', cityListCntroller_1.citysListController.post);
-    cityListRouter.put('/:id', cityListCntroller_1.citysListController.put);
+    cityListRouter.put('/:id([0-9]+)', cityListCntroller_1.citysListController.put);
     cityListRouter.put('/', cityListCntroller_1.citysListController.put);
     cityListRouter.delete('/', cityListCntroller_1.citysListController.delete);
-    cityListRouter.delete('/:id', cityListCntroller_1.citysListController.delete);
+    cityListRouter.delete('/:id([0-9]+)', cityListCntroller_1.citysListController.delete);
     return cityListRouter;
 };
 exports.getCityListRouter = getCityListRouter;

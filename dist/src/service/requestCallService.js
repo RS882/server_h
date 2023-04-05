@@ -18,6 +18,10 @@ class RequestCallService {
             userName: e.user_name,
             phoneNumber: e.tel_number,
         })) : [];
+        this._getSQLRequstCallModell = (db) => ({
+            user_name: db.userName,
+            tel_number: db.phoneNumber,
+        });
         this.get = (requestCallId) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const resSQL = yield requestCallRepository_1.requestCallRepository.get(requestCallId);
@@ -32,7 +36,7 @@ class RequestCallService {
         });
         this.post = (data) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const resSQL = yield requestCallRepository_1.requestCallRepository.post(data);
+                const resSQL = yield requestCallRepository_1.requestCallRepository.post(this._getSQLRequstCallModell(data));
                 if (resSQL.length === 0)
                     return this._getAPIRequstCallModell();
                 return this._getAPIRequstCallModell(resSQL);
@@ -46,12 +50,12 @@ class RequestCallService {
             try {
                 const resSQL = yield requestCallRepository_1.requestCallRepository.delete(requestCallId);
                 if (resSQL.length === 0)
-                    return this._getAPIRequstCallModell();
-                return;
+                    return false;
+                return true;
             }
             catch (error) {
                 console.log(error);
-                return this._getAPIRequstCallModell();
+                return false;
             }
         });
     }

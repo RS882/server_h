@@ -5,6 +5,7 @@ import { SQLRequestCallModel } from './../models/SQLModels/SQLRequestCallModel';
 import { requestCallRepository } from './../Repository/requestCallRepository';
 import { URIParamsRequestCallIdModel } from '../models/URIParamsUserIdModel';
 import { QueryResult } from 'pg';
+import { SQLRequestCallIdModel } from '../models/SQLModels/SQLRequestCallIdModel';
 
 
 
@@ -16,6 +17,12 @@ class RequestCallService {
 			userName: e.user_name,
 			phoneNumber: e.tel_number,
 		})) : [];
+
+	_getSQLRequstCallModell = (db: APIRequestCallModel): SQLRequestCallModel =>
+	({
+		user_name: db.userName,
+		tel_number: db.phoneNumber,
+	});
 
 
 	get = async (requestCallId?: URIParamsRequestCallIdModel): Promise<APIRequestCallModel[] | []> => {
@@ -29,9 +36,10 @@ class RequestCallService {
 		}
 	};
 
-	post = async (data: SQLRequestCallModel) => {
+	post = async (data: APIRequestCallModel): Promise<[] | APIRequestCallModel[]> => {
 		try {
-			const resSQL: SQLRequestCallModel[] = await requestCallRepository.post(data);
+			const resSQL: SQLRequestCallModel[] =
+				await requestCallRepository.post(this._getSQLRequstCallModell(data));
 			if (resSQL.length === 0) return this._getAPIRequstCallModell();
 			return this._getAPIRequstCallModell(resSQL);
 		} catch (error) {
@@ -41,14 +49,14 @@ class RequestCallService {
 
 	};
 
-	delete = async (requestCallId: URIParamsRequestCallIdModel) => {
+	delete = async (requestCallId: URIParamsRequestCallIdModel): Promise<boolean> => {
 		try {
-			const resSQL: undefined | never[] = await requestCallRepository.delete(requestCallId);
-			if (resSQL!.length === 0) return this._getAPIRequstCallModell();
-			return;
+			const resSQL: SQLRequestCallIdModel[] = await requestCallRepository.delete(requestCallId);
+			if (resSQL!.length === 0) return false;
+			return true;
 		} catch (error) {
 			console.log(error);
-			return this._getAPIRequstCallModell();
+			return false;
 		}
 	}
 }

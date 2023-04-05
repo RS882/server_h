@@ -5,17 +5,17 @@ import { IdbRequestCall } from '../db/types';
 
 
 
-export const getRequestCallRouter = (db: IdbRequestCall) => {
+export const getRequestCallRouter = () => {
 
 
 	const requsestCallRouter = express.Router();
 
-	requsestCallRouter.get('/', requestCallController.get(db));
-	requsestCallRouter.get('/:id', requestCallController.get(db));
-	requsestCallRouter.post('/', requestCallController.post(db));
-	requsestCallRouter.put('/:id', requestCallController.put);
+	requsestCallRouter.get('/', requestCallController.get);
+	requsestCallRouter.get('/:id([0-9]+)', requestCallController.get);
+	requsestCallRouter.post('/', requestCallController.post);
+	requsestCallRouter.put('/:id([0-9]+)', requestCallController.put);
 	requsestCallRouter.put('/', requestCallController.put);
-	requsestCallRouter.delete('/:id([0-9]+)', requestCallController.delete(db));
+	requsestCallRouter.delete('/:id([0-9]+)', requestCallController.delete);
 
 	return requsestCallRouter;
 

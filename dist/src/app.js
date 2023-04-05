@@ -23,5 +23,5 @@ exports.app.use(corsMiddleware);
 exports.app.options('*', corsMiddleware);
 exports.app.use('/phone_number', (0, phoneNumberRoute_1.getPhoneNumberRouter)());
 exports.app.use('/citys_list', (0, cityListRoute_1.getCityListRouter)());
-exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)(types_1.dbRequestCall));
+exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)());
 exports.app.use('/__test__', (0, testsRoutes_1.getTestsRouter)(types_1.dbRequestCall));

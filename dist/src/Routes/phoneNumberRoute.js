@@ -9,12 +9,12 @@ const phoheNumberCntroller_1 = require("../Controller/phoheNumberCntroller");
 const getPhoneNumberRouter = () => {
     const phoneNumberRouter = express_1.default.Router();
     phoneNumberRouter.get('/', phoheNumberCntroller_1.phoneNumberController.get);
-    phoneNumberRouter.get('/:id', phoheNumberCntroller_1.phoneNumberController.get);
+    phoneNumberRouter.get('/:id([0-9]+)', phoheNumberCntroller_1.phoneNumberController.get);
     phoneNumberRouter.post('/', phoheNumberCntroller_1.phoneNumberController.post);
-    phoneNumberRouter.put('/:id', phoheNumberCntroller_1.phoneNumberController.put);
+    phoneNumberRouter.put('/:id([0-9]+)', phoheNumberCntroller_1.phoneNumberController.put);
     phoneNumberRouter.put('/', phoheNumberCntroller_1.phoneNumberController.put);
     phoneNumberRouter.delete('/', phoheNumberCntroller_1.phoneNumberController.delete);
-    phoneNumberRouter.delete('/:id', phoheNumberCntroller_1.phoneNumberController.delete);
+    phoneNumberRouter.delete('/:id([0-9]+)', phoheNumberCntroller_1.phoneNumberController.delete);
     return phoneNumberRouter;
 };
 exports.getPhoneNumberRouter = getPhoneNumberRouter;
