@@ -25,6 +25,7 @@ class RequestCallController {
             ;
             if (req.params.id && foundRequestCall.length !== 0) {
                 res.json(foundRequestCall[0]);
+                return;
             }
             ;
             res.json(foundRequestCall);

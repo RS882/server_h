@@ -6,6 +6,8 @@ import { HTTP_STATUSES } from "../../src/HTTP_Status/HTTP_Status";
 
 import { CreateRequestCallModel } from '../../src/models/CreateRequestCall';
 import { APIRequestCallModel } from './../../src/models/APIModels/APIRequestCallModel';
+import { QueryResult } from 'pg';
+import { SQLRequestCallIdModel } from './../../src/models/SQLModels/SQLRequestCallIdModel';
 
 
 
@@ -21,8 +23,6 @@ describe('/request_call', () => {
 				tel_number VARCHAR(12),
 				is_not_processed BOOLEAN
 				);`);
-
-
 	});
 
 	afterAll(async () => {
@@ -32,21 +32,18 @@ describe('/request_call', () => {
 
 	const getMethodNotAllowdText = (method: string): string => `The request method ${method} is inappropriate for this URL`;
 
-	it('should return 200 and specified data', async () => {
+	it('GET :should return 200 and specified data', async () => {
 		const testData: APIRequestCallModel = {
 			userName: 'Test User',
 			phoneNumber: '012345678901',
-		}
+		};
 		const addTestDataToDb =
 			await db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
 			 values ($1, $2,true) ;`, [testData.userName, testData.phoneNumber]);
 		const getData = await request(app)
 			.get('/request_call')
 			.expect(HTTP_STATUSES.OK_200);
-
 		const getDataBody = getData.body;
-
-
 		expect(getDataBody).toEqual([{
 			id: expect.any(Number),
 			...testData,
@@ -54,6 +51,52 @@ describe('/request_call', () => {
 		const cleareDb = await db.query(`TRUNCATE request_call;`);
 
 	});
+
+	it('GET :should return 404 if there is no data', async () => {
+		const getData = await request(app)
+			.get('/request_call')
+			.expect(HTTP_STATUSES.NOT_FOUND_404);
+	});
+
+	it('GET :should return 404 when there is intcorrect URI parameter', async () => {
+		const getData = await request(app)
+			.get('/request_call/iwuu180')
+			.expect(HTTP_STATUSES.NOT_FOUND_404);
+	});
+
+	it('GET :should return 200 and specified data when there is correct URI parameter', async () => {
+		const testData: APIRequestCallModel = {
+			userName: 'Test User',
+			phoneNumber: '012345678901',
+		};
+		const addTestDataToDb: QueryResult<SQLRequestCallIdModel> =
+			await db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
+			 values ($1, $2,true) RETURNING id;`, [testData.userName, testData.phoneNumber]);
+		const createdDataId = addTestDataToDb.rows[0].id;
+		const getData = await request(app)
+			.get(`/request_call/${createdDataId}`)
+			.expect(HTTP_STATUSES.OK_200);
+		const getDataBody = getData.body;
+		expect(getDataBody).toEqual({
+			id: createdDataId,
+			...testData,
+		})
+		const cleareDb = await db.query(`TRUNCATE request_call;`);
+
+	});
+	it('should return 405 when PUT used ', async () => {
+		await request(app)
+			.put('/request_call')
+			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(API_METHODS.PUT))
+	});
+
+	it('should return 405 when PUT used  when there is a URI parameter', async () => {
+		await request(app)
+			.put('/request_call/ksksjsjj11818')
+			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(API_METHODS.PUT))
+	});
+
+
 	// it('should return 200 and an empty array when there is any URI parameter', async () => {
 	// 	await request(app)
 	// 		.get('/request_call/8sjsj2ha99asj')

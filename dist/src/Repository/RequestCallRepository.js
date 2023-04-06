@@ -15,8 +15,7 @@ class RequestCallRepository {
     constructor(db_sql) {
         this.get = (requestCallId) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const res = yield db_1.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId}` : `;`));
-                console.log(res.rows);
+                const res = yield db_1.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId.id}` : `;`));
                 return res.rows;
             }
             catch (error) {

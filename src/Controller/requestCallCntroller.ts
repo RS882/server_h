@@ -14,13 +14,16 @@ class RequestCallController {
 
 	get = async (req: RequestWithParams<URIParamsRequestCallIdModel>,
 		res: Response<APIRequestCallModel[] | APIRequestCallModel>) => {
+
 		const foundRequestCall = await requestCallService.get(req.params);
+
 		if (!foundRequestCall || foundRequestCall.length === 0) {
 			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
 		};
 		if (req.params.id && foundRequestCall.length !== 0) {
 			res.json(foundRequestCall[0]);
+			return;
 		};
 		res.json(foundRequestCall);
 	};

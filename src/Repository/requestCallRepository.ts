@@ -29,10 +29,7 @@ class RequestCallRepository {
 
 
 			const res: QueryResult<SQLRequestCallModel> =
-				await db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId}` : `;`));
-			console.log(res.rows);
-
-
+				await db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId!.id}` : `;`));
 			return res.rows;
 		} catch (error) {
 			console.log(error);

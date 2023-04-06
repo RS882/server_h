@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
+const APIMethods_1 = require("../../src/API_Methods/APIMethods");
 const app_1 = require("../../src/app");
 const db_1 = require("../../src/db/db");
 const HTTP_Status_1 = require("../../src/HTTP_Status/HTTP_Status");
@@ -31,7 +32,7 @@ describe('/request_call', () => {
         const renameTestDb = yield db_1.db.query(`ALTER TABLE request_call_test RENAME TO request_call;`);
     }));
     const getMethodNotAllowdText = (method) => `The request method ${method} is inappropriate for this URL`;
-    it('should return 200 and specified data', () => __awaiter(void 0, void 0, void 0, function* () {
+    it('GET :should return 200 and specified data', () => __awaiter(void 0, void 0, void 0, function* () {
         const testData = {
             userName: 'Test User',
             phoneNumber: '012345678901',
@@ -44,6 +45,41 @@ describe('/request_call', () => {
         const getDataBody = getData.body;
         expect(getDataBody).toEqual([Object.assign({ id: expect.any(Number) }, testData)]);
         const cleareDb = yield db_1.db.query(`TRUNCATE request_call;`);
+    }));
+    it('GET :should return 404 if there is no data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const getData = yield (0, supertest_1.default)(app_1.app)
+            .get('/request_call')
+            .expect(HTTP_Status_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('GET :should return 404 when there is intcorrect URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
+        const getData = yield (0, supertest_1.default)(app_1.app)
+            .get('/request_call/iwuu180')
+            .expect(HTTP_Status_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('GET :should return 200 and specified data when there is correct URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
+        const testData = {
+            userName: 'Test User',
+            phoneNumber: '012345678901',
+        };
+        const addTestDataToDb = yield db_1.db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
+			 values ($1, $2,true) RETURNING id;`, [testData.userName, testData.phoneNumber]);
+        const createdDataId = addTestDataToDb.rows[0].id;
+        const getData = yield (0, supertest_1.default)(app_1.app)
+            .get(`/request_call/${createdDataId}`)
+            .expect(HTTP_Status_1.HTTP_STATUSES.OK_200);
+        const getDataBody = getData.body;
+        expect(getDataBody).toEqual(Object.assign({ id: createdDataId }, testData));
+        const cleareDb = yield db_1.db.query(`TRUNCATE request_call;`);
+    }));
+    it('should return 405 when PUT used ', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(app_1.app)
+            .put('/request_call')
+            .expect(HTTP_Status_1.HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(APIMethods_1.API_METHODS.PUT));
+    }));
+    it('should return 405 when PUT used  when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(app_1.app)
+            .put('/request_call/ksksjsjj11818')
+            .expect(HTTP_Status_1.HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(APIMethods_1.API_METHODS.PUT));
     }));
     // it('should return 200 and an empty array when there is any URI parameter', async () => {
     // 	await request(app)

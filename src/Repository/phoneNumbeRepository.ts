@@ -29,7 +29,7 @@ class PhoneNumberRepository {
 		try {
 			const res: QueryResult<SQLPhoneNumberMobel> = await db.query(this.query);
 
-			// await addCityToSql()
+
 			// const get = {
 			// 	text: 'SELECT id, user_name,tel_number FROM request_call where is_not_processed = $1 AND id = 14;',
 			// 	values: [true],
