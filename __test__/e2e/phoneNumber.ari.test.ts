@@ -12,8 +12,13 @@ describe('/phone_number', () => {
 	const testPhoneNumber = '058098098098';
 
 	beforeAll(async () => {
-		const createTestDb = await db.query(`CREATE TABLE tel_number_test AS TABLE tel_number;`);
-		const cleareDb = await db.query(`TRUNCATE tel_number;`);
+		const renameDBBeforTest = await db.query(`ALTER TABLE tel_number RENAME TO tel_number_test;`);
+		const cleateTestDb = await db.query(
+			`create TABLE tel_number(
+			id SERIAL PRIMARY KEY,
+			tel_number VARCHAR(12),
+			is_aktive BOOLEAN
+		);`);
 		const addTestDataToDb =
 			await db.query(`INSERT INTO tel_number(tel_number, is_aktive) values ('${testPhoneNumber}',true);`);
 	});

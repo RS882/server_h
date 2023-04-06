@@ -11,8 +11,13 @@ describe('/citys_list', () => {
 	const testCityName = 'London';
 
 	beforeAll(async () => {
-		const createTestDb = await db.query(`CREATE TABLE city_test AS TABLE city;`);
-		const cleareDb = await db.query(`TRUNCATE city;`);
+		const renameDBBeforTest = await db.query(`ALTER TABLE city RENAME TO city_test;`);
+		const cleateTestDb = await db.query(
+			`create TABLE city(
+			id SERIAL PRIMARY KEY,
+			city_name VARCHAR(255),
+			is_aktive BOOLEAN
+			);`);
 		const addTestDataToDb =
 			await db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
 	});
@@ -33,7 +38,7 @@ describe('/citys_list', () => {
 
 	it('should return 200 and specified data when there is a URI parameter', async () => {
 		await request(app)
-			.get('/citys_list/isdio1020')
+			.get('/citys_list/' + -20)
 			.expect(HTTP_STATUSES.OK_200, { citysList: [testCityName] })
 	});
 
@@ -51,7 +56,7 @@ describe('/citys_list', () => {
 
 	it('should return 405 when PUT used  when there is a URI parameter', async () => {
 		await request(app)
-			.put('/citys_list/ksksjsjj11818')
+			.put('/citys_list/' + -20)
 			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(API_METHODS.PUT))
 	});
 
@@ -63,7 +68,7 @@ describe('/citys_list', () => {
 
 	it('should return 405 when DELETE used  when there is a URI parameter', async () => {
 		await request(app)
-			.delete('/citys_list/ksksuuuiijsjj11818')
+			.delete('/citys_list/' + -20)
 			.expect(HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(API_METHODS.DELETE))
 	});
 

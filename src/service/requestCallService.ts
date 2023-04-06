@@ -52,7 +52,7 @@ class RequestCallService {
 	delete = async (requestCallId: URIParamsRequestCallIdModel): Promise<boolean> => {
 		try {
 			const resSQL: SQLRequestCallIdModel[] = await requestCallRepository.delete(requestCallId);
-			if (resSQL!.length === 0) return false;
+			if (resSQL.length === 0) return false;
 			return true;
 		} catch (error) {
 			console.log(error);

@@ -15,7 +15,8 @@ class RequestCallRepository {
     constructor(db_sql) {
         this.get = (requestCallId) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const res = yield db_1.db.query(this.query.get + requestCallId ? ` AND id=${requestCallId}` : `;`);
+                const res = yield db_1.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId}` : `;`));
+                console.log(res.rows);
                 return res.rows;
             }
             catch (error) {
@@ -46,7 +47,7 @@ class RequestCallRepository {
         });
         this.db = db_sql;
         this.query = {
-            get: 'SELECT id, user_name,tel_number FROM request_call where is_not_processed = true',
+            get: 'SELECT id, user_name, tel_number FROM request_call where is_not_processed = true',
             post: 'INSERT INTO request_call(user_name, tel_number, is_not_processed) values($1,$2,true) RETURNING user_name, tel_number ;',
             delete: 'DELETE FROM request_call  where id = $1 RETURNING id;',
         };

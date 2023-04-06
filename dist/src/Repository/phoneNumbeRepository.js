@@ -16,6 +16,7 @@ class PhoneNumberRepository {
         this.get = () => __awaiter(this, void 0, void 0, function* () {
             try {
                 const res = yield db_1.db.query(this.query);
+                // await addCityToSql()
                 // const get = {
                 // 	text: 'SELECT id, user_name,tel_number FROM request_call where is_not_processed = $1 AND id = 14;',
                 // 	values: [true],

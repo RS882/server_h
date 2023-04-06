@@ -1,5 +1,5 @@
 import express from 'express';
-import { dbRequestCall } from './db/types';
+
 import cors from 'cors';
 import { getPhoneNumberRouter } from './Routes/phoneNumberRoute';
 import { getTestsRouter } from './Routes/testsRoutes';
@@ -25,7 +25,7 @@ app.options('*', corsMiddleware);
 app.use('/phone_number', getPhoneNumberRouter());
 app.use('/citys_list', getCityListRouter());
 app.use('/request_call', getRequestCallRouter());
-app.use('/__test__', getTestsRouter(dbRequestCall));
+// app.use('/__test__', getTestsRouter(dbRequestCall));
 
 
 

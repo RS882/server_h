@@ -20,8 +20,12 @@ const db_1 = require("../../src/db/db");
 describe('/phone_number', () => {
     const testPhoneNumber = '058098098098';
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        const createTestDb = yield db_1.db.query(`CREATE TABLE tel_number_test AS TABLE tel_number;`);
-        const cleareDb = yield db_1.db.query(`TRUNCATE tel_number;`);
+        const renameDBBeforTest = yield db_1.db.query(`ALTER TABLE tel_number RENAME TO tel_number_test;`);
+        const cleateTestDb = yield db_1.db.query(`create TABLE tel_number(
+			id SERIAL PRIMARY KEY,
+			tel_number VARCHAR(12),
+			is_aktive BOOLEAN
+		);`);
         const addTestDataToDb = yield db_1.db.query(`INSERT INTO tel_number(tel_number, is_aktive) values ('${testPhoneNumber}',true);`);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {

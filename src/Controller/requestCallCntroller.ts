@@ -1,28 +1,16 @@
 import { Request, Response } from "express";
 import { API_METHODS } from "../API_Methods/APIMethods";
 import { HTTP_STATUSES } from "../HTTP_Status/HTTP_Status";
-
 import { RequestWithBody, RequestWithParams } from "../types";
 import { getMethodNotAllowdText, isFormatedTelNumberCorrect } from "../Utilite/function";
-import { CreateRequestCallModel } from './../models/CreateRequestCall';
-
-import { IdbRequestCall, IRequestCall } from "../db/types";
 import { APIRequestCallModel } from "../models/APIModels/APIRequestCallModel";
 import { APINotAllowMethodModel } from "../models/APIModels/APINotAllowMethodModel";
 import { URIParamsRequestCallIdModel } from "../models/URIParamsUserIdModel";
 import { requestCallService } from "../service/requestCallService";
 
 
-
-
 class RequestCallController {
 
-
-	_getAPIRequstCallModell = (db: IRequestCall): IRequestCall => ({
-		id: db.id,
-		userName: db.userName,
-		phoneNumber: db.phoneNumber,
-	})
 
 	get = async (req: RequestWithParams<URIParamsRequestCallIdModel>,
 		res: Response<APIRequestCallModel[] | APIRequestCallModel>) => {
@@ -60,9 +48,9 @@ class RequestCallController {
 
 	delete = async (req: RequestWithParams<URIParamsRequestCallIdModel>, res: Response) => {
 
-		const isRequestCallDelete: boolean = await requestCallService.delete(req.params);
+		const isRequestCallDeleted: boolean = await requestCallService.delete(req.params);
 		res.sendStatus(
-			isRequestCallDelete ?
+			isRequestCallDeleted ?
 				HTTP_STATUSES.NO_CONTENT_204 :
 				HTTP_STATUSES.NOT_FOUND_404
 		);

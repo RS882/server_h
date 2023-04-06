@@ -20,8 +20,12 @@ const db_1 = require("../../src/db/db");
 describe('/citys_list', () => {
     const testCityName = 'London';
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        const createTestDb = yield db_1.db.query(`CREATE TABLE city_test AS TABLE city;`);
-        const cleareDb = yield db_1.db.query(`TRUNCATE city;`);
+        const renameDBBeforTest = yield db_1.db.query(`ALTER TABLE city RENAME TO city_test;`);
+        const cleateTestDb = yield db_1.db.query(`create TABLE city(
+			id SERIAL PRIMARY KEY,
+			city_name VARCHAR(255),
+			is_aktive BOOLEAN
+			);`);
         const addTestDataToDb = yield db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -36,7 +40,7 @@ describe('/citys_list', () => {
     }));
     it('should return 200 and specified data when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
-            .get('/citys_list/isdio1020')
+            .get('/citys_list/' + -20)
             .expect(HTTP_Status_1.HTTP_STATUSES.OK_200, { citysList: [testCityName] });
     }));
     it('should return 405 when POST used ', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,7 +55,7 @@ describe('/citys_list', () => {
     }));
     it('should return 405 when PUT used  when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
-            .put('/citys_list/ksksjsjj11818')
+            .put('/citys_list/' + -20)
             .expect(HTTP_Status_1.HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(APIMethods_1.API_METHODS.PUT));
     }));
     it('should return 405 when DELETE used ', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,7 +65,7 @@ describe('/citys_list', () => {
     }));
     it('should return 405 when DELETE used  when there is a URI parameter', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
-            .delete('/citys_list/ksksuuuiijsjj11818')
+            .delete('/citys_list/' + -20)
             .expect(HTTP_Status_1.HTTP_STATUSES.METHOD_NOT_ALLOWED_405, getMethodNotAllowdText(APIMethods_1.API_METHODS.DELETE));
     }));
 });

@@ -75,7 +75,7 @@ server.listen(PORT);
 // U - PUT / PATH
 // D - DELETE
 
-fetch('http://localhost:4010/phone_number', { method: 'GET' })
+fetch('http://localhost:4010/citys_list/185', { method: 'GET' })
 	.then(res => res.json())
 	.then(json => console.log(json))
 
@@ -91,7 +91,7 @@ fetch('http://localhost:4010/request_call', { method: 'GET' })
 	.then(res => res.json())
 	.then(json => console.log(json))
 
-fetch('http://localhost:4010/phone_number/1', { method: 'DELETE' })
+fetch('http://localhost:4010/citys_list/185', { method: 'DELETE' })
 	.then(res => res.json())
 	.then(json => console.log(json))
 

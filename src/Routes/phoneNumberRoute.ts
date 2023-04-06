@@ -8,12 +8,12 @@ export const getPhoneNumberRouter = () => {
 	const phoneNumberRouter = express.Router();
 
 	phoneNumberRouter.get('/', phoneNumberController.get);
-	phoneNumberRouter.get('/:id([0-9]+)', phoneNumberController.get);
+	phoneNumberRouter.get('/:id', phoneNumberController.get);
 	phoneNumberRouter.post('/', phoneNumberController.post);
-	phoneNumberRouter.put('/:id([0-9]+)', phoneNumberController.put);
+	phoneNumberRouter.put('/:id', phoneNumberController.put);
 	phoneNumberRouter.put('/', phoneNumberController.put);
 	phoneNumberRouter.delete('/', phoneNumberController.delete);
-	phoneNumberRouter.delete('/:id([0-9]+)', phoneNumberController.delete);
+	phoneNumberRouter.delete('/:id', phoneNumberController.delete);
 
 	return phoneNumberRouter;
 

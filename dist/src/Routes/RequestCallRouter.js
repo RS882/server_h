@@ -11,7 +11,7 @@ const getRequestCallRouter = () => {
     requsestCallRouter.get('/', requestCallCntroller_1.requestCallController.get);
     requsestCallRouter.get('/:id([0-9]+)', requestCallCntroller_1.requestCallController.get);
     requsestCallRouter.post('/', requestCallCntroller_1.requestCallController.post);
-    requsestCallRouter.put('/:id([0-9]+)', requestCallCntroller_1.requestCallController.put);
+    requsestCallRouter.put('/:id', requestCallCntroller_1.requestCallController.put);
     requsestCallRouter.put('/', requestCallCntroller_1.requestCallController.put);
     requsestCallRouter.delete('/:id([0-9]+)', requestCallCntroller_1.requestCallController.delete);
     return requsestCallRouter;
