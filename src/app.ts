@@ -2,7 +2,7 @@ import express from 'express';
 
 import cors from 'cors';
 import { getPhoneNumberRouter } from './Routes/phoneNumberRoute';
-import { getTestsRouter } from './Routes/testsRoutes';
+
 import { getCityListRouter } from './Routes/cityListRoute';
 import { getRequestCallRouter } from './Routes/RequestCallRouter';
 

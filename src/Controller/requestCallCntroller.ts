@@ -14,9 +14,7 @@ class RequestCallController {
 
 	get = async (req: RequestWithParams<URIParamsRequestCallIdModel>,
 		res: Response<APIRequestCallModel[] | APIRequestCallModel>) => {
-
 		const foundRequestCall = await requestCallService.get(req.params);
-
 		if (!foundRequestCall || foundRequestCall.length === 0) {
 			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
@@ -39,7 +37,7 @@ class RequestCallController {
 		};
 		const savedRequestCall = await requestCallService.post(req.body);
 		if (!savedRequestCall || savedRequestCall.length === 0) {
-			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 			return;
 		};
 		res.status(HTTP_STATUSES.CREATED_201).json(savedRequestCall[0]);
@@ -50,7 +48,6 @@ class RequestCallController {
 	};
 
 	delete = async (req: RequestWithParams<URIParamsRequestCallIdModel>, res: Response) => {
-
 		const isRequestCallDeleted: boolean = await requestCallService.delete(req.params);
 		res.sendStatus(
 			isRequestCallDeleted ?

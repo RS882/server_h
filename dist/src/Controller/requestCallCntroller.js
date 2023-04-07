@@ -40,7 +40,7 @@ class RequestCallController {
             ;
             const savedRequestCall = yield requestCallService_1.requestCallService.post(req.body);
             if (!savedRequestCall || savedRequestCall.length === 0) {
-                res.sendStatus(HTTP_Status_1.HTTP_STATUSES.NOT_FOUND_404);
+                res.sendStatus(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
                 return;
             }
             ;

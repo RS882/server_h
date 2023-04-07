@@ -7,7 +7,7 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon --inspect .\\dist\\src\\index.js",
-    "test": "jest requestCall.ari.test.ts"
+    "test": "jest"
   },
   "dependencies": {
     "@types/cors": "^2.8.13",
