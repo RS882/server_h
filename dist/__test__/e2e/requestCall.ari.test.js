@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const APIMethods_1 = require("../../src/API_Methods/APIMethods");
-const app_1 = require("../../src/app");
-const db_1 = require("../../src/db/db");
-const HTTP_Status_1 = require("../../src/HTTP_Status/HTTP_Status");
+const APIMethods_1 = require("../../API_Methods/APIMethods");
+const app_1 = require("../../app");
+const db_1 = require("../../db/db");
+const HTTP_Status_1 = require("../../HTTP_Status/HTTP_Status");
 describe('/request_call', () => {
     beforeAll(async () => {
         const renameDBBeforTest = await db_1.db.query(`ALTER TABLE request_call RENAME TO request_call_test;`);

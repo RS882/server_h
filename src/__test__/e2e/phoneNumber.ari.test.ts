@@ -1,8 +1,8 @@
 import request from "supertest"
-import { API_METHODS } from "../../src/API_Methods/APIMethods";
-import { app } from "../../src/app";
-import { HTTP_STATUSES } from "../../src/HTTP_Status/HTTP_Status";
-import { db } from '../../src/db/db';
+import { API_METHODS } from "../../API_Methods/APIMethods";
+import { app } from "../../app";
+import { HTTP_STATUSES } from "../../HTTP_Status/HTTP_Status";
+import { db } from '../../db/db';
 
 
 

@@ -1,11 +1,11 @@
 import request from "supertest"
-import { API_METHODS } from "../../src/API_Methods/APIMethods";
-import { app } from "../../src/app";
-import { db } from "../../src/db/db";
-import { HTTP_STATUSES } from "../../src/HTTP_Status/HTTP_Status";
-import { APIRequestCallModel } from './../../src/models/APIModels/APIRequestCallModel';
+import { API_METHODS } from "../../API_Methods/APIMethods";
+import { app } from "../../app";
+import { db } from "../../db/db";
+import { HTTP_STATUSES } from "../../HTTP_Status/HTTP_Status";
+import { APIRequestCallModel } from '../../models/APIModels/APIRequestCallModel';
 import { QueryResult } from 'pg';
-import { SQLRequestCallIdModel } from './../../src/models/SQLModels/SQLRequestCallIdModel';
+import { SQLRequestCallIdModel } from '../../models/SQLModels/SQLRequestCallIdModel';
 
 
 
