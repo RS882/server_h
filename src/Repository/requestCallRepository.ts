@@ -29,7 +29,7 @@ class RequestCallRepository {
 
 
 			const res: QueryResult<SQLRequestCallModel> =
-				await db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId!.id}` : `;`));
+				await this.db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId!.id}` : `;`));
 			return res.rows;
 		} catch (error) {
 			console.log(error);
@@ -41,7 +41,7 @@ class RequestCallRepository {
 	post = async (data: SQLRequestCallModel): Promise<SQLRequestCallModel[]> => {
 		try {
 			const res: QueryResult<SQLRequestCallModel> =
-				await db.query(this.query.post, [data.user_name, data.tel_number]);
+				await this.db.query(this.query.post, [data.user_name, data.tel_number]);
 			return res.rows;
 		} catch (error) {
 			console.log(error);
@@ -52,7 +52,7 @@ class RequestCallRepository {
 	delete = async (requestCallId: URIParamsRequestCallIdModel): Promise<SQLRequestCallIdModel[]> => {
 		try {
 			const res: QueryResult<SQLRequestCallIdModel> =
-				await db.query(this.query.delete, [requestCallId.id]);
+				await this.db.query(this.query.delete, [requestCallId.id]);
 			return res.rows;
 		} catch (error) {
 			console.log(error);

@@ -14,46 +14,75 @@ class RequestCallController {
 
 	get = async (req: RequestWithParams<URIParamsRequestCallIdModel>,
 		res: Response<APIRequestCallModel[] | APIRequestCallModel>) => {
-		const foundRequestCall = await requestCallService.get(req.params);
-		if (!foundRequestCall || foundRequestCall.length === 0) {
+		try {
+			const foundRequestCall = await requestCallService.get(req.params);
+			if (!foundRequestCall || foundRequestCall.length === 0) {
+				res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+				return;
+			};
+			if (req.params.id && foundRequestCall.length !== 0) {
+				res.json(foundRequestCall[0]);
+				return;
+			};
+			res.json(foundRequestCall);
+		} catch (error) {
+			console.log(error);
 			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
-		};
-		if (req.params.id && foundRequestCall.length !== 0) {
-			res.json(foundRequestCall[0]);
-			return;
-		};
-		res.json(foundRequestCall);
+		}
+
 	};
 
 
 	post = async (req: RequestWithBody<APIRequestCallModel>,
 		res: Response<APIRequestCallModel>) => {
-		if (!req.body.userName ||
-			req.body.userName!.split('').filter((e) => e !== ' ').length <= 0 ||
-			!isFormatedTelNumberCorrect(req.body.phoneNumber)) {
-			res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+		try {
+
+			if (!req.body.userName ||
+				req.body.userName!.split('').filter((e) => e !== ' ').length <= 0 ||
+				!isFormatedTelNumberCorrect(req.body.phoneNumber)) {
+				res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+				return;
+			};
+			const savedRequestCall = await requestCallService.post(req.body);
+			if (!savedRequestCall || savedRequestCall.length === 0) {
+				res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+				return;
+			};
+			res.status(HTTP_STATUSES.CREATED_201).json(savedRequestCall[0]);
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 			return;
-		};
-		const savedRequestCall = await requestCallService.post(req.body);
-		if (!savedRequestCall || savedRequestCall.length === 0) {
-			res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-			return;
-		};
-		res.status(HTTP_STATUSES.CREATED_201).json(savedRequestCall[0]);
+		}
+
 	};
 
 	put = async (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT));
+		try {
+			res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT));
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	};
 
 	delete = async (req: RequestWithParams<URIParamsRequestCallIdModel>, res: Response) => {
-		const isRequestCallDeleted: boolean = await requestCallService.delete(req.params);
-		res.sendStatus(
-			isRequestCallDeleted ?
-				HTTP_STATUSES.NO_CONTENT_204 :
-				HTTP_STATUSES.NOT_FOUND_404
-		);
+		try {
+			const isRequestCallDeleted: boolean = await requestCallService.delete(req.params);
+			res.sendStatus(
+				isRequestCallDeleted ?
+					HTTP_STATUSES.NO_CONTENT_204 :
+					HTTP_STATUSES.NOT_FOUND_404
+			);
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	}
 };
 

@@ -17,6 +17,32 @@ create TABLE request_call(
 	is_not_processed BOOLEAN
 	);
 
+
+
+-- /////////////////////////////////////
+
+CREATE TABLE user_auth(
+	id SERIAL PRIMARY KEY,
+	email VARCHAR(255) UNIQUE NOT NULL,
+	pasword VARCHAR(255) NOT NULL,
+	is_activated BOOLEAN DEFAULT false,
+	activation_link  VARCHAR(255)
+	);
+
+CREATE TABLE token(
+	id SERIAL PRIMARY KEY,
+	refresh_token VARCHAR(500) NOT NULL,
+	user_ip_aderss VARCHAR(255),
+	user_id integer,
+	FOREIGN KEY (user_id) REFERENCES user_auth(id)
+);
+
+INSERT INTO user_auth(email, pasword) values ('11','22');
+INSERT INTO user_auth(email, pasword) values ('22','33');
+INSERT INTO user_auth(email, pasword) values ('33','44');
+INSERT INTO user_auth(email, pasword) values ('44','55');
+-- /////////////////////////////////////
+
 DROP TABLE IF EXISTS tel_number_test;
 CREATE TABLE tel_number_test AS TABLE tel_number;
 ALTER TABLE tel_number_test RENAME TO tel_number_test1;
@@ -63,3 +89,10 @@ INSERT INTO city (city_name , is_aktive) VALUES
     ( 'Cheese', 9.99),
     ( 'Bread', 1.99),
    ('Milk', 2.99);
+
+Email CHARACTER VARYING(30) UNIQUE,
+
+ order_id integer NOT NULL,
+
+
+ SELECT EXISTS (SELECT * FROM a.t_dname WHERE dname = 'efim360');

@@ -10,6 +10,7 @@ import { addCityToSql } from '../db/addToDb';
 
 
 
+
 class PhoneNumberRepository {
 	db: Pool;
 	query: {
@@ -27,7 +28,7 @@ class PhoneNumberRepository {
 	};
 	get = async () => {
 		try {
-			const res: QueryResult<SQLPhoneNumberMobel> = await db.query(this.query);
+			const res: QueryResult<SQLPhoneNumberMobel> = await this.db.query(this.query);
 
 
 			// const get = {
@@ -39,9 +40,17 @@ class PhoneNumberRepository {
 			// const res11: QueryResult<SQLRequestCallModel> = await db.query(get.delete, [16]);
 			// console.log(res11.rows);
 
+			// const searchEmail: QueryResult<{ exists: boolean }> = await this.db.query(`SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`, ['11'])
+			// console.log(searchEmail.rows[0].exists);
+
+			// const insertEmail = await this.db.query(`INSERT INTO user_auth(email, pasword) values ('9922','33') RETURNING *;`)
+			// console.log(insertEmail.rows[0]);
+
 			return res.rows;
-		} catch (error) {
-			console.log(error);
+		} catch (e: any) {
+			console.log(e);
+
+			// console.log(e.cod ? e.code : '');
 			return [];
 		}
 
@@ -50,3 +59,59 @@ class PhoneNumberRepository {
 }
 
 export const phoneNumberRepository = new PhoneNumberRepository(db);
+
+// Array(18)
+// 0
+// :
+// "length"
+// 1
+// :
+// "name"
+// 2
+// :
+// "severity"
+// 3
+// :
+// "code"
+// 4
+// :
+// "detail"
+// 5
+// :
+// "hint"
+// 6
+// :
+// "position"
+// 7
+// :
+// "internalPosition"
+// 8
+// :
+// "internalQuery"
+// 9
+// :
+// "where"
+// 10
+// :
+// "schema"
+// 11
+// :
+// "table"
+// 12
+// :
+// "column"
+// 13
+// :
+// "dataType"
+// 14
+// :
+// "constraint"
+// 15
+// :
+// "file"
+// 16
+// :
+// "line"
+// 17
+// :
+// "routine"

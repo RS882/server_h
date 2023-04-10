@@ -13,21 +13,50 @@ import { cityListService } from './../service/citysListService';
 
 
 
+
 class CitysListController {
 
 
 	get = async (req: Request, res: Response<APICitysListModel>) => {
-		const resSQL = await cityListService.get();
-		res.json(resSQL);
+		try {
+			const resSQL = await cityListService.get();
+			res.json(resSQL);
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	}
 	post = async (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
+		try {
+			res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.POST));
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	}
 	put = async (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT))
+		try {
+			res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.PUT))
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	}
 	delete = async (req: Request, res: Response<APINotAllowMethodModel>) => {
-		res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.DELETE))
+		try {
+			res.status(HTTP_STATUSES.METHOD_NOT_ALLOWED_405).end(getMethodNotAllowdText(API_METHODS.DELETE))
+		} catch (error) {
+			console.log(error);
+			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			return;
+		}
+
 	}
 }
 

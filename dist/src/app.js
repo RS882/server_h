@@ -9,9 +9,12 @@ const cors_1 = __importDefault(require("cors"));
 const phoneNumberRoute_1 = require("./Routes/phoneNumberRoute");
 const cityListRoute_1 = require("./Routes/cityListRoute");
 const RequestCallRouter_1 = require("./Routes/RequestCallRouter");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const authenticationRouter_1 = require("./Moduls/Authentication/Routers/authenticationRouter");
 exports.app = (0, express_1.default)();
 const jsonBodyMiddleware = express_1.default.json();
 exports.app.use(jsonBodyMiddleware);
+exports.app.use((0, cookie_parser_1.default)());
 const corsOptions = {
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -22,4 +25,6 @@ exports.app.options('*', corsMiddleware);
 exports.app.use('/phone_number', (0, phoneNumberRoute_1.getPhoneNumberRouter)());
 exports.app.use('/citys_list', (0, cityListRoute_1.getCityListRouter)());
 exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)());
+exports.app.use('/request_call', (0, RequestCallRouter_1.getRequestCallRouter)());
+exports.app.use('/auth', (0, authenticationRouter_1.getAuthRouter)());
 // app.use('/__test__', getTestsRouter(dbRequestCall));
