@@ -5,35 +5,31 @@ const db_1 = require("../db/db");
 class RequestCallRepository {
     constructor(db_sql) {
         this.get = async (requestCallId) => {
-            try {
-                const res = await this.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId.id}` : `;`));
-                return res.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return [];
-            }
-            ;
+            // try {
+            const res = await this.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId.id}` : `;`));
+            return res.rows;
+            // } catch (error) {
+            // 	console.log(error);
+            // 	return [];
+            // };
         };
         this.post = async (data) => {
-            try {
-                const res = await this.db.query(this.query.post, [data.user_name, data.tel_number]);
-                return res.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return [];
-            }
+            // try {
+            const res = await this.db.query(this.query.post, [data.user_name, data.tel_number]);
+            return res.rows;
+            // } catch (error) {
+            // 	console.log(error);
+            // 	return [];
+            // }
         };
         this.delete = async (requestCallId) => {
-            try {
-                const res = await this.db.query(this.query.delete, [requestCallId.id]);
-                return res.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return [];
-            }
+            // try {
+            const res = await this.db.query(this.query.delete, [requestCallId.id]);
+            return res.rows;
+            // } catch (error) {
+            // 	console.log(error);
+            // 	return [];
+            // }
         };
         this.db = db_sql;
         this.query = {

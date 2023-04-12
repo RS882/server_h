@@ -34,7 +34,7 @@ CREATE TABLE token(
 	refresh_token VARCHAR(500) NOT NULL,
 	user_ip_aderss VARCHAR(255),
 	user_id integer,
-	FOREIGN KEY (user_id) REFERENCES user_auth(id)
+	FOREIGN KEY (user_id) REFERENCES user_auth(id) ON DELETE CASCADE
 );
 
 INSERT INTO user_auth(email, pasword) values ('11','22');

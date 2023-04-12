@@ -25,39 +25,39 @@ class RequestCallRepository {
 		}
 	};
 	get = async (requestCallId?: URIParamsRequestCallIdModel): Promise<SQLRequestCallModel[]> => {
-		try {
+		// try {
 
 
-			const res: QueryResult<SQLRequestCallModel> =
-				await this.db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId!.id}` : `;`));
-			return res.rows;
-		} catch (error) {
-			console.log(error);
-			return [];
-		};
+		const res: QueryResult<SQLRequestCallModel> =
+			await this.db.query(this.query.get + (requestCallId!.id ? ` AND id=${requestCallId!.id}` : `;`));
+		return res.rows;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return [];
+		// };
 
 	};
 
 	post = async (data: SQLRequestCallModel): Promise<SQLRequestCallModel[]> => {
-		try {
-			const res: QueryResult<SQLRequestCallModel> =
-				await this.db.query(this.query.post, [data.user_name, data.tel_number]);
-			return res.rows;
-		} catch (error) {
-			console.log(error);
-			return [];
-		}
+		// try {
+		const res: QueryResult<SQLRequestCallModel> =
+			await this.db.query(this.query.post, [data.user_name, data.tel_number]);
+		return res.rows;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return [];
+		// }
 
 	};
 	delete = async (requestCallId: URIParamsRequestCallIdModel): Promise<SQLRequestCallIdModel[]> => {
-		try {
-			const res: QueryResult<SQLRequestCallIdModel> =
-				await this.db.query(this.query.delete, [requestCallId.id]);
-			return res.rows;
-		} catch (error) {
-			console.log(error);
-			return [];
-		}
+		// try {
+		const res: QueryResult<SQLRequestCallIdModel> =
+			await this.db.query(this.query.delete, [requestCallId.id]);
+		return res.rows;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return [];
+		// }
 	};
 
 }

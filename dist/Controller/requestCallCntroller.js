@@ -47,7 +47,7 @@ class RequestCallController {
             }
             catch (error) {
                 console.log(error);
-                res.sendStatus(HTTP_Status_1.HTTP_STATUSES.NOT_FOUND_404);
+                res.sendStatus(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
                 return;
             }
         };

@@ -87,6 +87,17 @@ fetch('http://localhost:4010/request_call', { method: 'POST', body: JSON.stringi
 	.then(res => res.json())
 	.then(json => console.log(json))
 
+fetch('http://localhost:4010//auth/registration', {
+	method: 'POST',
+	body: JSON.stringify({
+		"userEmail": "werty@uw.com",
+		"userPassword": "12345"
+	}),
+	headers: { 'content-type': 'application/json' }
+})
+	.then(res => res.json())
+	.then(json => console.log(json))
+
 fetch('http://localhost:4010/request_call', { method: 'GET' })
 	.then(res => res.json())
 	.then(json => console.log(json))

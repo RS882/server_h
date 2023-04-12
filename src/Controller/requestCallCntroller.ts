@@ -52,7 +52,7 @@ class RequestCallController {
 			res.status(HTTP_STATUSES.CREATED_201).json(savedRequestCall[0]);
 		} catch (error) {
 			console.log(error);
-			res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+			res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 			return;
 		}
 

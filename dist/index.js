@@ -25,9 +25,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv")); // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config();
+const process_1 = require("process");
 const app_1 = require("./app");
 try {
-    const PORT = process.env.PORT || 4010; // process.env.PORT пытаемся получить порт из системынх данных
+    const PORT = process_1.env.PORT || 4010; // process.env.PORT пытаемся получить порт из системынх данных
     app_1.app.listen(+PORT, () => {
         console.log(`Example app listening on port ${PORT}`);
     });

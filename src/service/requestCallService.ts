@@ -26,38 +26,38 @@ class RequestCallService {
 
 
 	get = async (requestCallId?: URIParamsRequestCallIdModel): Promise<APIRequestCallModel[] | []> => {
-		try {
-			const resSQL: SQLRequestCallModel[] = await requestCallRepository.get(requestCallId);
-			if (resSQL.length === 0) return this._getAPIRequstCallModell();
-			return this._getAPIRequstCallModell(resSQL);
-		} catch (error) {
-			console.log(error);
-			return this._getAPIRequstCallModell();
-		}
+		// try {
+		const resSQL: SQLRequestCallModel[] = await requestCallRepository.get(requestCallId);
+		if (resSQL.length === 0) return this._getAPIRequstCallModell();
+		return this._getAPIRequstCallModell(resSQL);
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return this._getAPIRequstCallModell();
+		// }
 	};
 
 	post = async (data: APIRequestCallModel): Promise<[] | APIRequestCallModel[]> => {
-		try {
-			const resSQL: SQLRequestCallModel[] =
-				await requestCallRepository.post(this._getSQLRequstCallModell(data));
-			if (resSQL.length === 0) return this._getAPIRequstCallModell();
-			return this._getAPIRequstCallModell(resSQL);
-		} catch (error) {
-			console.log(error);
-			return this._getAPIRequstCallModell();
-		}
+		// try {
+		const resSQL: SQLRequestCallModel[] =
+			await requestCallRepository.post(this._getSQLRequstCallModell(data));
+		if (resSQL.length === 0) return this._getAPIRequstCallModell();
+		return this._getAPIRequstCallModell(resSQL);
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return this._getAPIRequstCallModell();
+		// }
 
 	};
 
 	delete = async (requestCallId: URIParamsRequestCallIdModel): Promise<boolean> => {
-		try {
-			const resSQL: SQLRequestCallIdModel[] = await requestCallRepository.delete(requestCallId);
-			if (resSQL.length === 0) return false;
-			return true;
-		} catch (error) {
-			console.log(error);
-			return false;
-		}
+		// try {
+		const resSQL: SQLRequestCallIdModel[] = await requestCallRepository.delete(requestCallId);
+		if (resSQL.length === 0) return false;
+		return true;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return false;
+		// }
 	}
 }
 export const requestCallService = new RequestCallService();

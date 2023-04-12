@@ -20,13 +20,13 @@ class CitysListRepository {
 		}
 	};
 	get = async () => {
-		try {
-			const res: QueryResult<SQLCitysListModel> = await this.db.query(this.query);
-			return res.rows;
-		} catch (error) {
-			console.log(error);
-			return [];
-		}
+		// try {
+		const res: QueryResult<SQLCitysListModel> = await this.db.query(this.query);
+		return res.rows;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return [];
+		// }
 
 	};
 

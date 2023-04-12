@@ -5,14 +5,13 @@ const db_1 = require("../db/db");
 class CitysListRepository {
     constructor(db_sql) {
         this.get = async () => {
-            try {
-                const res = await this.db.query(this.query);
-                return res.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return [];
-            }
+            // try {
+            const res = await this.db.query(this.query);
+            return res.rows;
+            // } catch (error) {
+            // 	console.log(error);
+            // 	return [];
+            // }
         };
         this.db = db_sql;
         this.query = {

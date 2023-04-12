@@ -12,15 +12,15 @@ class CityListService {
 
 
 	get = async (): Promise<APICitysListModel> => {
-		try {
-			const resSQL = await citysListRepository.get();
-			if (resSQL.length === 0) return this._getAPICitysListModel();
-			return this._getAPICitysListModel(resSQL);
+		// try {
+		const resSQL = await citysListRepository.get();
+		if (resSQL.length === 0) return this._getAPICitysListModel();
+		return this._getAPICitysListModel(resSQL);
 
-		} catch (error) {
-			console.log(error);
-			return this._getAPICitysListModel();
-		}
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return this._getAPICitysListModel();
+		// }
 	};
 }
 export const cityListService = new CityListService();
