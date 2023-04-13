@@ -1,10 +1,8 @@
 import { Pool, QueryResult } from "pg";
 import { db } from "../../../db/db";
 
-import { UserRegMessageModel } from "../Models/UserRegMessageModel";
-
 import { TokenModel } from "../Models/TokenModel";
-import { log } from "console";
+
 import { SQLTokenModel } from "../Models/SQLModels/SQLTokenModel";
 
 class TokenRepositoty {

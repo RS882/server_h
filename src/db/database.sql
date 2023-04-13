@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS tel_number_test;
 CREATE TABLE tel_number_test AS TABLE tel_number;
 ALTER TABLE tel_number_test RENAME TO tel_number_test1;
 
-TRUNCATE tel_number;
+TRUNCATE tel_number CASCADE;
 
 UPDATE tel_number set is_aktive = true where id = 1;
 DELETE FROM tel_number  where id = 1;

@@ -1,4 +1,4 @@
-import { APIUserLoginModel } from "./APIUserLoginModel";
+import { APIUserLoginModel } from "./APIModels/APIUserLoginModel";
 
 export interface UserAuthModel extends APIUserLoginModel {
 	/**

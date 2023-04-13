@@ -1,8 +1,7 @@
 import { Pool, QueryResult } from "pg";
 import { db } from "../../../db/db";
 import { UserAuthModel } from "../Models/UserAuthModel";
-import { UserRegMessageModel } from "../Models/UserRegMessageModel";
-import { SQLCODE } from "../SQLCode/sqlCode";
+
 import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
 
 
@@ -33,10 +32,10 @@ class UserRepositoty {
 
 
 	};
-	searchUserData = async (userEmail: string): Promise<boolean > => {
+	searchUserData = async (userEmail: string): Promise<boolean> => {
 		// try {
-			const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchUserData, [userEmail]);
-			return isUserFound.rows[0].exists;
+		const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchUserData, [userEmail]);
+		return isUserFound.rows[0].exists;
 		// } catch (error) {
 		// 	console.log('searchUserData');
 

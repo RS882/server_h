@@ -2,10 +2,9 @@ import jwt from 'jsonwebtoken';
 import { env } from 'process';
 import { TokenGenerateModel } from '../Models/TokenGenerateModel';
 import { TokenModel } from '../Models/TokenModel';
-import { log } from 'console';
+
 import { tokenRepositoty } from '../Repository/TokenRepository';
-import { read } from 'fs';
-import { UserRegMessageModel } from '../Models/UserRegMessageModel';
+
 import { UserDTOModel } from '../Models/UserDTOModel';
 import { SQLTokenModel } from '../Models/SQLModels/SQLTokenModel';
 import { TokenDTO } from '../DTOs/TokenDTO';
