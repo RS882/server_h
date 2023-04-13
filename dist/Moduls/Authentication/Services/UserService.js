@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const UserRepository_1 = require("../Repository/UserRepository");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const uuid_1 = __importDefault(require("uuid"));
+const uuid_1 = require("uuid");
 const MailService_1 = require("./MailService");
 const TokenService_1 = require("./TokenService");
 const UserDTO_1 = require("../DTOs/UserDTO");
+const UserAuthDTO_1 = require("../DTOs/UserAuthDTO");
 class UserService {
     constructor() {
         this.reg = async (userRedData) => {
@@ -17,10 +18,14 @@ class UserService {
             if (isUserFound)
                 throw new Error(`The user with email ${userRedData.userEmail} has already been registered`);
             const hashPass = await bcrypt_1.default.hash(userRedData.userPassword, 3); // хешируем пароль для хранения в базе
-            const uuidActivationLink = uuid_1.default.v4(); // генерируем строку для активации емейла
-            const regUser = await UserRepository_1.userRepositoty.addUserRedDataToSQL(Object.assign(Object.assign({}, userRedData), { userPassword: hashPass, activationLink: uuidActivationLink }));
-            await MailService_1.mailService.sendActivationLink(regUser.userEmail, uuidActivationLink);
+            const uuidActivationLink = (0, uuid_1.v4)(); // генерируем строку для активации емейла
+            const regUserSQL = await UserRepository_1.userRepositoty.addUserRedDataToSQL(Object.assign(Object.assign({}, userRedData), { userPassword: hashPass, activationLink: uuidActivationLink }));
+            const regUser = new UserAuthDTO_1.UserAuthDTO(regUserSQL);
+            const sendMail = await MailService_1.mailService.sendActivationLink(regUser.userEmail, uuidActivationLink);
+            // console.log(regUser);
             const userDTO = new UserDTO_1.UserDTO(regUser);
+            // const tt: UserAuthModel = { userEmail: '11', userId: 11, isActivated: true, userPassword: '11' }
+            // const dto2 = new UserDTO(tt)
             const tokens = TokenService_1.tokenService.generateTokens(Object.assign({}, userDTO));
             const saveRefreshToken = await TokenService_1.tokenService.saveToken(userDTO.id, tokens.refreshToken);
             return Object.assign(Object.assign({}, tokens), { user: userDTO });

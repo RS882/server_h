@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userAuthController = void 0;
 const UserService_1 = require("../Services/UserService");
 const HTTP_Status_1 = require("../../../HTTP_Status/HTTP_Status");
+const sqlCode_1 = require("../SQLCode/sqlCode");
 class UserAuthController {
     constructor() {
         this.registration = async (req, res, next) => {
@@ -17,6 +18,7 @@ class UserAuthController {
                 // 	return;
                 // };
                 const regData = await UserService_1.userService.reg(reqUserData);
+                // console.log(reqUserData);
                 // передаем в куку рефрештокен , его время жизни, 
                 //httpOnly: true и secure: true - запрет на получение куку из браузера с помощь JS 
                 res.cookie('refreshToken', regData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
@@ -24,12 +26,12 @@ class UserAuthController {
                 return;
             }
             catch (error) {
-                // if (error.code && error.code === SQLCODE.duplicate_key_violates_unique_constraint_23505) {
-                // 	res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(`The user with email ${req.body.userEmail} has already been registered`)
-                // 	return;
-                // }
+                if (error.code && error.code === sqlCode_1.SQLCODE.duplicate_key_violates_unique_constraint_23505) {
+                    res.status(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(`The user with email ${req.body.userEmail} has already been registered`);
+                    return;
+                }
                 console.log(error);
-                // res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+                res.sendStatus(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
                 return;
             }
         };

@@ -7,6 +7,7 @@ exports.tokenService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const process_1 = require("process");
 const TokenRepository_1 = require("../Repository/TokenRepository");
+const TokenDTO_1 = require("../DTOs/TokenDTO");
 class TokenService {
     constructor() {
         this.generateTokens = (payload) => {
@@ -19,11 +20,13 @@ class TokenService {
             let token;
             if (isTokenFoundInDB) {
                 const updateTokenInSQL = await TokenRepository_1.tokenRepositoty.updateToken({ userId, refreshToken });
-                token = updateTokenInSQL.refreshToken;
+                const updatedToken = new TokenDTO_1.TokenDTO(updateTokenInSQL);
+                token = updatedToken.refreshToken;
             }
             else {
                 const createTokenInSQL = await TokenRepository_1.tokenRepositoty.createToken({ userId, refreshToken });
-                token = createTokenInSQL.refreshToken;
+                const createdToken = new TokenDTO_1.TokenDTO(createTokenInSQL);
+                token = createdToken.refreshToken;
             }
             return token;
         };

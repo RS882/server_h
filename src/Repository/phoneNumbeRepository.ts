@@ -5,7 +5,7 @@ import { SQLPhoneNumberMobel } from '../models/SQLModels/SQLPhoneNumberMobel';
 import { SQLRequestCallModel } from '../models/SQLModels/SQLRequestCallModel';
 import { addCityToSql } from '../db/addToDb';
 import { env } from 'process';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -29,6 +29,10 @@ class PhoneNumberRepository {
 	get = async () => {
 		// try {
 		const res: QueryResult<SQLPhoneNumberMobel> = await this.db.query(this.query);
+
+
+		// const uuidActivationLink: string = uuidv4();
+		// console.log(uuidActivationLink);
 
 		// console.log(env.JWT_REFRESH_SECRET);
 

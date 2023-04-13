@@ -22,6 +22,8 @@ class UserAuthController {
 			// 	return;
 			// };
 			const regData: UserRegModel = await userService.reg(reqUserData);
+			// console.log(reqUserData);
+
 			// передаем в куку рефрештокен , его время жизни, 
 			//httpOnly: true и secure: true - запрет на получение куку из браузера с помощь JS 
 			res.cookie('refreshToken', regData.refreshToken,
@@ -29,13 +31,13 @@ class UserAuthController {
 
 			res.status(HTTP_STATUSES.CREATED_201).json(regData);
 			return;
-		} catch (error) {
-			// if (error.code && error.code === SQLCODE.duplicate_key_violates_unique_constraint_23505) {
-			// 	res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(`The user with email ${req.body.userEmail} has already been registered`)
-			// 	return;
-			// }
+		} catch (error: any | unknown) {
+			if (error.code && error.code === SQLCODE.duplicate_key_violates_unique_constraint_23505) {
+				res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(`The user with email ${req.body.userEmail} has already been registered`)
+				return;
+			}
 			console.log(error);
-			// res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+			res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 			return;
 		}
 

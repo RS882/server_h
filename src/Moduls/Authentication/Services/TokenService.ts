@@ -7,6 +7,8 @@ import { tokenRepositoty } from '../Repository/TokenRepository';
 import { read } from 'fs';
 import { UserRegMessageModel } from '../Models/UserRegMessageModel';
 import { UserDTOModel } from '../Models/UserDTOModel';
+import { SQLTokenModel } from '../Models/SQLModels/SQLTokenModel';
+import { TokenDTO } from '../DTOs/TokenDTO';
 
 
 
@@ -20,15 +22,17 @@ class TokenService {
 
 	saveToken = async (userId: TokenModel['userId'], refreshToken: TokenModel['refreshToken']): Promise<string> => {
 
-		const isTokenFoundInDB: boolean = await tokenRepositoty.searchToken(userId);
+		const isTokenFoundInDB: boolean | undefined = await tokenRepositoty.searchToken(userId);
 
 		let token: string;
-		if (isTokenFoundInDB) {
-			const updateTokenInSQL: TokenModel = await tokenRepositoty.updateToken({ userId, refreshToken });
-			token = updateTokenInSQL.refreshToken;
+		if (isTokenFoundInDB!) {
+			const updateTokenInSQL: SQLTokenModel = await tokenRepositoty.updateToken({ userId, refreshToken });
+			const updatedToken = new TokenDTO(updateTokenInSQL);
+			token = updatedToken.refreshToken;
 		} else {
-			const createTokenInSQL: TokenModel = await tokenRepositoty.createToken({ userId, refreshToken });
-			token = createTokenInSQL.refreshToken;
+			const createTokenInSQL: SQLTokenModel = await tokenRepositoty.createToken({ userId, refreshToken });
+			const createdToken = new TokenDTO(createTokenInSQL);
+			token = createdToken.refreshToken;
 		}
 		return token;
 
