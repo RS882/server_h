@@ -20,14 +20,14 @@ class UserAuthController {
                 }
                 ;
                 const regData = await UserService_1.userService.reg(reqUserData);
-                // передаем в куку рефрештокен , его время жизни, 
+                // передаем в куку рефрештокен , его время жизни,  
                 //httpOnly: true и secure: true(для https) - запрет на получение куку из браузера с помощь JS 
                 res.cookie('refreshToken', regData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
                 res.status(HTTP_Status_1.HTTP_STATUSES.CREATED_201).json(regData);
                 return;
             }
             catch (error) {
-                console.log(error);
+                // console.log(error);
                 if (error.message.includes(`The user with email`)) {
                     res.status(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
                     return;

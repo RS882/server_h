@@ -1,12 +1,13 @@
 import express from 'express';
 
 import cors from 'cors';
-import { getPhoneNumberRouter } from './Routes/phoneNumberRoute';
 
-import { getCityListRouter } from './Routes/cityListRoute';
-import { getRequestCallRouter } from './Routes/RequestCallRouter';
+
+import { getCityListRouter } from './Moduls/StartAppPayload/Routers/cityListRoute';
+import { getRequestCallRouter } from './Moduls/RequestCall/Routers/RequestCallRouter';
 import cookieParser from 'cookie-parser';
 import { getAuthRouter } from './Moduls/Authentication/Routers/authenticationRouter';
+import { getPhoneNumberRouter } from './Moduls/StartAppPayload/Routers/phoneNumberRoute';
 
 
 

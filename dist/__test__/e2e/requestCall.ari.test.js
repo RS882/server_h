@@ -10,7 +10,6 @@ const db_1 = require("../../db/db");
 const HTTP_Status_1 = require("../../HTTP_Status/HTTP_Status");
 describe('/request_call', () => {
     beforeAll(async () => {
-        const renameDBBeforTest = await db_1.db.query(`ALTER TABLE request_call RENAME TO request_call_test;`);
         const cleateTestDb = await db_1.db.query(`create TABLE request_call(
 				id SERIAL PRIMARY KEY,
 				user_name VARCHAR(255),
@@ -20,7 +19,6 @@ describe('/request_call', () => {
     });
     afterAll(async () => {
         const delTestDb = await db_1.db.query(`DROP TABLE IF EXISTS request_call;`);
-        const renameDb = await db_1.db.query(`ALTER TABLE request_call_test RENAME TO request_call;`);
     });
     //========================================
     const postAndGetTestData = async (testData) => {

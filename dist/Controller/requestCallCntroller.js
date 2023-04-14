@@ -4,7 +4,7 @@ exports.requestCallController = void 0;
 const APIMethods_1 = require("../API_Methods/APIMethods");
 const HTTP_Status_1 = require("../HTTP_Status/HTTP_Status");
 const function_1 = require("../Utilite/function");
-const requestCallService_1 = require("../service/requestCallService");
+const requestCallService_1 = require("../Moduls/RequestCall/Services/requestCallService");
 class RequestCallController {
     constructor() {
         this.get = async (req, res) => {

@@ -9,30 +9,32 @@ const app_1 = require("../../app");
 const HTTP_Status_1 = require("../../HTTP_Status/HTTP_Status");
 const db_1 = require("../../db/db");
 describe('/citys_list', () => {
-    const testCityName = 'London';
     beforeAll(async () => {
-        const renameDBBeforTest = await db_1.db.query(`ALTER TABLE city RENAME TO city_test;`);
         const cleateTestDb = await db_1.db.query(`create TABLE city(
 			id SERIAL PRIMARY KEY,
 			city_name VARCHAR(255),
 			is_aktive BOOLEAN
 			);`);
-        const addTestDataToDb = await db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
     });
     afterAll(async () => {
         const delDb = await db_1.db.query(`DROP TABLE IF EXISTS city;`);
-        const renameTestDb = await db_1.db.query(`ALTER TABLE city_test RENAME TO city;`);
     });
     const getMethodNotAllowdText = (method) => `The request method ${method} is inappropriate for this URL`;
     it('should return 200 and specified data ', async () => {
+        const testCityName = 'London';
+        const addTestDataToDb = await db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
         await (0, supertest_1.default)(app_1.app)
             .get('/citys_list')
             .expect(HTTP_Status_1.HTTP_STATUSES.OK_200, { citysList: [testCityName] });
+        const cleareDb = await db_1.db.query(`TRUNCATE city;`);
     });
     it('should return 200 and specified data when there is a URI parameter', async () => {
+        const testCityName = 'London';
+        const addTestDataToDb = await db_1.db.query(`INSERT INTO city(city_name , is_aktive) values ($1, $2);`, [testCityName, true]);
         await (0, supertest_1.default)(app_1.app)
             .get('/citys_list/' + -20)
             .expect(HTTP_Status_1.HTTP_STATUSES.OK_200, { citysList: [testCityName] });
+        const cleareDb = await db_1.db.query(`TRUNCATE city;`);
     });
     it('should return 405 when POST used ', async () => {
         await (0, supertest_1.default)(app_1.app)
