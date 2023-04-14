@@ -2,23 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestCallService = void 0;
 const requestCallRepository_1 = require("../Repository/requestCallRepository");
+const requestCallDTO_1 = require("../DTOs/requestCallDTO");
 class RequestCallService {
     constructor() {
-        this._getAPIRequstCallModell = (db) => db ? db.map(e => ({
-            id: e.id,
-            userName: e.user_name,
-            phoneNumber: e.tel_number,
-        })) : [];
-        this._getSQLRequstCallModell = (db) => ({
-            user_name: db.userName,
-            tel_number: db.phoneNumber,
-        });
+        // _getAPIRequstCallModell = (db?: SQLRequestCallModel[]): APIRequestCallModel[] | [] =>
+        // 	db ? db.map(e => ({
+        // 		id: e.id,
+        // 		userName: e.user_name,
+        // 		phoneNumber: e.tel_number,
+        // 	})) : [];
+        // _getSQLRequstCallModell = (db: APIRequestCallModel): SQLRequestCallModel =>
+        // ({
+        // 	user_name: db.userName,
+        // 	tel_number: db.phoneNumber,
+        // });
         this.get = async (requestCallId) => {
             // try {
             const resSQL = await requestCallRepository_1.requestCallRepository.get(requestCallId);
             if (resSQL.length === 0)
-                return this._getAPIRequstCallModell();
-            return this._getAPIRequstCallModell(resSQL);
+                return [];
+            return resSQL.map(e => new requestCallDTO_1.RequesCallDTOToAPI(e));
             // } catch (error) {
             // 	console.log(error);
             // 	return this._getAPIRequstCallModell();
@@ -26,10 +29,10 @@ class RequestCallService {
         };
         this.post = async (data) => {
             // try {
-            const resSQL = await requestCallRepository_1.requestCallRepository.post(this._getSQLRequstCallModell(data));
+            const resSQL = await requestCallRepository_1.requestCallRepository.post(new requestCallDTO_1.RequesCallDTOToSQL(data));
             if (resSQL.length === 0)
-                return this._getAPIRequstCallModell();
-            return this._getAPIRequstCallModell(resSQL);
+                return [];
+            return resSQL.map(e => new requestCallDTO_1.RequesCallDTOToAPI(e));
             // } catch (error) {
             // 	console.log(error);
             // 	return this._getAPIRequstCallModell();
