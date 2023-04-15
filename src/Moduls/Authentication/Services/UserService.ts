@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { mailService } from "./MailService";
 import { tokenService } from "./TokenService";
 import { UserDTO } from "../DTOs/UserDTO";
-
+import { env } from 'process';
 import { APIUserRegModel } from "../Models/APIModels/APIUserRegModel";
 import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
 import { TokenGenerateModel } from "../Models/TokenGenerateModel";
@@ -35,7 +35,8 @@ class UserService {
 		const regUser = new UserAuthDTO(regUserSQL);
 
 
-		const sendMail = await mailService.sendActivationLink(regUser.userEmail, uuidActivationLink);
+		const sendMail = await mailService.sendActivationLink(regUser.userEmail,
+			`${env.API_URL}/auth/activate/${uuidActivationLink}`);
 
 		const userDTO = new UserDTO(regUser);
 

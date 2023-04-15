@@ -10,6 +10,7 @@ const uuid_1 = require("uuid");
 const MailService_1 = require("./MailService");
 const TokenService_1 = require("./TokenService");
 const UserDTO_1 = require("../DTOs/UserDTO");
+const process_1 = require("process");
 const UserAuthDTO_1 = require("../DTOs/UserAuthDTO");
 const errorMessage_1 = require("../../../ErrorMessage/errorMessage");
 class UserService {
@@ -22,7 +23,7 @@ class UserService {
             const uuidActivationLink = (0, uuid_1.v4)(); // генерируем строку для активации емейла
             const regUserSQL = await UserRepository_1.userRepositoty.addUserRedDataToSQL(Object.assign(Object.assign({}, userRedData), { userPassword: hashPass, activationLink: uuidActivationLink }));
             const regUser = new UserAuthDTO_1.UserAuthDTO(regUserSQL);
-            const sendMail = await MailService_1.mailService.sendActivationLink(regUser.userEmail, uuidActivationLink);
+            const sendMail = await MailService_1.mailService.sendActivationLink(regUser.userEmail, `${process_1.env.API_URL}/auth/activate/${uuidActivationLink}`);
             const userDTO = new UserDTO_1.UserDTO(regUser);
             // const tt: UserAuthModel = { userEmail: '11', userId: 11, isActivated: true, userPassword: '11' }
             // const dto2 = new UserDTO(tt)
