@@ -31,6 +31,16 @@ class UserService {
             const saveRefreshToken = await TokenService_1.tokenService.saveToken(userDTO.id, tokens.refreshToken);
             return Object.assign(Object.assign({}, tokens), { user: userDTO });
         };
+        this.aktivate = async (activationLink) => {
+            try {
+                const isActivationLinkFound = await UserRepository_1.userRepositoty.searchAktivationLink(activationLink);
+                // if (!isActivationLinkFound) throw new Error(errorMessage.INCORRECT_ACTIVATION_LINK);
+                const setAtivation = await UserRepository_1.userRepositoty.setUserActivationTrue(activationLink);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        };
     }
 }
 exports.userService = new UserService();

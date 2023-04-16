@@ -1,13 +1,14 @@
 
 import { NextFunction, Request, Response } from "express";
-import { RequestWithBody } from "../../../types";
+import { RequestWithBody, RequestWithParams } from "../../../types";
 import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
 import { APIUserRegModel } from "../Models/APIModels/APIUserRegModel";
 import { userService } from "../Services/UserService";
 import { HTTP_STATUSES } from "../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../ErrorMessage/errorMessage";
-import { db } from "../../../db/db";
 
+import { LinkParamsModel } from "../Models/LinkParamsModel";
+import { env } from 'process';
 
 
 class UserAuthController {
@@ -39,6 +40,7 @@ class UserAuthController {
 			if (error.message.includes(`The user with email`)) {
 				res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
 				return;
+
 			} else {
 				res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 				return;
@@ -63,10 +65,22 @@ class UserAuthController {
 		}
 
 	};
-	activate = async (req: Request, res: Response, next: NextFunction) => {
+	activate = async (req: RequestWithParams<LinkParamsModel>, res: Response, next: NextFunction) => {
 		try {
+			const activeLink = req.params.link;
+			await userService.aktivate(activeLink);
+			return res.redirect(env.CLIENT_URL!)
 
-		} catch (error) {
+		} catch (error: any | unknown) {
+			// console.log(error);
+			if (error.message === errorMessage.INCORRECT_ACTIVATION_LINK) {
+				res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
+				return;
+
+			} else {
+				res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+				return;
+			}
 
 		}
 

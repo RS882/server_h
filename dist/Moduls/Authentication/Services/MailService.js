@@ -10,7 +10,7 @@ class MailService {
     constructor() {
         this.sendActivationLink = async (to, link) => {
             try {
-                await this.transporter.sendMail({
+                const sendMail = await this.transporter.sendMail({
                     from: process_1.env.SMPT_USER,
                     to,
                     subject: `Activation of the account on ${process_1.env.API_URL}`,
@@ -22,6 +22,7 @@ class MailService {
 			</div>
 			`,
                 });
+                // console.log(sendMail);
             }
             catch (error) {
                 console.log(error);

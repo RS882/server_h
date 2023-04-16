@@ -29,7 +29,7 @@ class MailService {
 	sendActivationLink = async (to: ActivationLinkModel['to'],
 		link: ActivationLinkModel['link']): Promise<void> => {
 		try {
-			await this.transporter.sendMail({
+			const sendMail = await this.transporter.sendMail({
 				from: env.SMPT_USER,
 				to,
 				subject: `Activation of the account on ${env.API_URL}`,
@@ -40,7 +40,10 @@ class MailService {
 				<a href="${link}">"${link} </a>
 			</div>
 			`,
+
+
 			})
+			// console.log(sendMail);
 		} catch (error) {
 			console.log(error);
 

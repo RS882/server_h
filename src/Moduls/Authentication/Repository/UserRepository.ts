@@ -9,15 +9,23 @@ class UserRepositoty {
 	db: Pool;
 	query: {
 		insertUserData: string;
-		searchUserData: string;
+		searchUserDataText: string;
+		searchAktivationLinkText: string;
+		setActivationTruetext: string;
+
 	}
 	constructor(dbSql: Pool) {
 		this.db = dbSql;
 		this.query = {
-			searchUserData: `SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`,
+			searchUserDataText: `SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`,
 			insertUserData: `INSERT INTO user_auth(email, pasword, activation_link) values ($1,$2,$3) RETURNING *;`,
+			searchAktivationLinkText: `SELECT EXISTS (SELECT * FROM user_auth WHERE activation_link = $1) ;`,
+			setActivationTruetext: `UPDATE user_auth SET is_activated = true WHERE activation_link = $1;`,
+
 		}
 	};
+
+
 
 	addUserRedDataToSQL = async ({ userEmail, userPassword, activationLink }: UserAuthModel): Promise<SQLUserAuthModel> => {
 		// try {
@@ -34,7 +42,7 @@ class UserRepositoty {
 	};
 	searchUserData = async (userEmail: string): Promise<boolean> => {
 		// try {
-		const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchUserData, [userEmail]);
+		const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchUserDataText, [userEmail]);
 		return isUserFound.rows[0].exists;
 		// } catch (error) {
 		// 	console.log('searchUserData');
@@ -43,6 +51,34 @@ class UserRepositoty {
 		// }
 
 	};
+
+	searchAktivationLink = async (aktivationLink: string): Promise<boolean | undefined> => {
+
+		try {
+
+			const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
+			return isUserFound.rows[0].exists;
+		} catch (error) {
+			console.log('searchAktivationLink');
+
+			console.log(error);
+		}
+
+
+	};
+
+	setUserActivationTrue = async (aktivationLink: string): Promise<void> => {
+		try {
+
+			const setActivation = await this.db.query(this.query.setActivationTruetext, [aktivationLink]);
+
+		} catch (error) {
+			console.log('setActivation');
+
+			console.log(error);
+		}
+	}
+
 
 }
 

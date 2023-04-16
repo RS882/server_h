@@ -4,6 +4,7 @@ exports.userAuthController = void 0;
 const UserService_1 = require("../Services/UserService");
 const HTTP_Status_1 = require("../../../HTTP_Status/HTTP_Status");
 const errorMessage_1 = require("../../../ErrorMessage/errorMessage");
+const process_1 = require("process");
 class UserAuthController {
     constructor() {
         this.registration = async (req, res, next) => {
@@ -52,8 +53,20 @@ class UserAuthController {
         };
         this.activate = async (req, res, next) => {
             try {
+                const activeLink = req.params.link;
+                await UserService_1.userService.aktivate(activeLink);
+                return res.redirect(process_1.env.CLIENT_URL);
             }
             catch (error) {
+                // console.log(error);
+                if (error.message === errorMessage_1.errorMessage.INCORRECT_ACTIVATION_LINK) {
+                    res.status(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
+                    return;
+                }
+                else {
+                    res.sendStatus(HTTP_Status_1.HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+                    return;
+                }
             }
         };
         this.refresh = async (req, res, next) => {

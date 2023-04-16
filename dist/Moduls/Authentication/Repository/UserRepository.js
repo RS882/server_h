@@ -15,17 +15,38 @@ class UserRepositoty {
         };
         this.searchUserData = async (userEmail) => {
             // try {
-            const isUserFound = await this.db.query(this.query.searchUserData, [userEmail]);
+            const isUserFound = await this.db.query(this.query.searchUserDataText, [userEmail]);
             return isUserFound.rows[0].exists;
             // } catch (error) {
             // 	console.log('searchUserData');
             // 	console.log(error);
             // }
         };
+        this.searchAktivationLink = async (aktivationLink) => {
+            try {
+                const isUserFound = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
+                return isUserFound.rows[0].exists;
+            }
+            catch (error) {
+                console.log('searchAktivationLink');
+                console.log(error);
+            }
+        };
+        this.setUserActivationTrue = async (aktivationLink) => {
+            try {
+                const setActivation = await this.db.query(this.query.setActivationTruetext, [aktivationLink]);
+            }
+            catch (error) {
+                console.log('setActivation');
+                console.log(error);
+            }
+        };
         this.db = dbSql;
         this.query = {
-            searchUserData: `SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`,
+            searchUserDataText: `SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`,
             insertUserData: `INSERT INTO user_auth(email, pasword, activation_link) values ($1,$2,$3) RETURNING *;`,
+            searchAktivationLinkText: `SELECT EXISTS (SELECT * FROM user_auth WHERE activation_link = $1) ;`,
+            setActivationTruetext: `UPDATE user_auth SET is_activated = true WHERE activation_link = $1;`,
         };
     }
     ;

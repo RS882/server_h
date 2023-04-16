@@ -21,7 +21,7 @@ class UserService {
 	reg = async (userRedData: APIUserLoginModel): Promise<APIUserRegModel> => {
 
 		const isUserFound = await userRepositoty.searchUserData(userRedData.userEmail);
-		if (isUserFound!) throw new Error(
+		if (isUserFound) throw new Error(
 			errorMessage.REPETITION_EMAIL[0] + ` ${userRedData.userEmail} ` + errorMessage.REPETITION_EMAIL[1]);
 
 		const hashPass: string = await bcrypt.hash(userRedData.userPassword, 3);// хешируем пароль для хранения в базе
@@ -50,6 +50,18 @@ class UserService {
 
 		return { ...tokens, user: userDTO };
 
+
+	};
+
+	aktivate = async (activationLink: string) => {
+		try {
+			const isActivationLinkFound = await userRepositoty.searchAktivationLink(activationLink);
+			// if (!isActivationLinkFound) throw new Error(errorMessage.INCORRECT_ACTIVATION_LINK);
+			const setAtivation = await userRepositoty.setUserActivationTrue(activationLink);
+		} catch (error) {
+			console.log(error);
+
+		}
 
 	};
 
