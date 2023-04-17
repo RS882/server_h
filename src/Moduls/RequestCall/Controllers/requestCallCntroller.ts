@@ -40,7 +40,7 @@ class RequestCallController {
 		try {
 
 			if (!req.body.userName ||
-				req.body.userName!.split('').filter((e) => e !== ' ').length <= 0 ||
+				req.body.userName!.split('').filter((e: string) => e !== ' ').length <= 0 ||
 				!isFormatedTelNumberCorrect(req.body.phoneNumber)) {
 				res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
 				return;

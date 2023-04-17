@@ -1,8 +1,5 @@
 import express from 'express';
-
 import cors from 'cors';
-
-
 import { getCityListRouter } from './Moduls/StartAppPayload/Routers/cityListRoute';
 import { getRequestCallRouter } from './Moduls/RequestCall/Routers/RequestCallRouter';
 import cookieParser from 'cookie-parser';

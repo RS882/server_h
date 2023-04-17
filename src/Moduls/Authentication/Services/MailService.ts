@@ -3,7 +3,7 @@ import { ActivationLinkModel } from "../Models/ActivationLinkModel";
 
 import { env } from 'process';
 import nodemailer from "nodemailer";
-import { log } from "console";
+
 
 
 class MailService {
