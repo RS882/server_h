@@ -23,8 +23,8 @@ class UserAuthController {
                 const regData = await UserService_1.userService.reg(reqUserData);
                 // передаем в куку рефрештокен , его время жизни,  
                 //httpOnly: true и secure: true(для https) - запрет на получение куку из браузера с помощь JS 
-                res.cookie('refreshToken', regData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: true });
-                res.status(HTTP_Status_1.HTTP_STATUSES.CREATED_201).json(regData);
+                res.cookie('refreshToken', regData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+                    .status(HTTP_Status_1.HTTP_STATUSES.CREATED_201).json(regData);
                 return;
             }
             catch (error) {

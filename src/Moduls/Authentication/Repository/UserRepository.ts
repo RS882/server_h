@@ -52,17 +52,17 @@ class UserRepositoty {
 
 	};
 
-	searchAktivationLink = async (aktivationLink: string): Promise<boolean | undefined> => {
+	searchAktivationLink = async (aktivationLink: string): Promise<boolean> => {
 
-		try {
+		// try {
 
-			const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
-			return isUserFound.rows[0].exists;
-		} catch (error) {
-			console.log('searchAktivationLink');
+		const isUserFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
+		return isUserFound.rows[0].exists;
+		// } catch (error) {
+		// 	console.log('searchAktivationLink');
 
-			console.log(error);
-		}
+		// 	console.log(error);
+		// }
 
 
 	};

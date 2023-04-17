@@ -18,7 +18,7 @@ class MailService {
                     html: `
 			<div>
 				<h1> For activation, follow the link</h1>
-				<a href="${link}">"${link} </a>
+				<a href="${link}">${link} </a>
 			</div>
 			`,
                 });

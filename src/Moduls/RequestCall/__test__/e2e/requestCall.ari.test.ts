@@ -116,6 +116,22 @@ describe('/request_call', () => {
 		await postAndGetTestData(testData);
 	});
 
+
+
+	it('POST: should request call with correct data', async () => {
+		const testData: APIRequestCallModel = {
+			userName: 'Test User',
+			phoneNumber: '012345678901',
+		};
+		const createData = await request(app)
+			.post('/request_call')
+			.send(testData)
+			.expect(HTTP_STATUSES.CREATED_201);
+		const createdDataBody = createData.body;
+		expect(createdDataBody).toEqual({ ...testData, })
+		const cleareDb = await db.query(`TRUNCATE request_call;`);
+	});
+
 	it('POST: should return 500 if it is not possible to create a record on the server', async () => {
 		const delDbForTest = await db.query(`DROP TABLE IF EXISTS request_call;`);
 		const testData: APIRequestCallModel = { userName: 'John', phoneNumber: '012012012012' };
@@ -130,20 +146,6 @@ describe('/request_call', () => {
 					tel_number VARCHAR(12),
 					is_not_processed BOOLEAN
 					);`);
-	});
-
-	it('POST: should request call with correct data', async () => {
-		const testData: APIRequestCallModel = {
-			userName: 'Test User',
-			phoneNumber: '012345678901',
-		};
-		const createData = await request(app)
-			.post('/request_call')
-			.send(testData)
-			.expect(HTTP_STATUSES.CREATED_201);
-		const createdDataBody = createData.body;
-		expect(createdDataBody).toEqual({ ...testData, })
-		const cleareDb = await db.query(`TRUNCATE request_call;`);
 	});
 
 	it('DELETE :should return 404 when there is intcorrect URI parameter', async () => {

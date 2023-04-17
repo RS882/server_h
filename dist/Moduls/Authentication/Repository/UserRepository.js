@@ -23,14 +23,13 @@ class UserRepositoty {
             // }
         };
         this.searchAktivationLink = async (aktivationLink) => {
-            try {
-                const isUserFound = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
-                return isUserFound.rows[0].exists;
-            }
-            catch (error) {
-                console.log('searchAktivationLink');
-                console.log(error);
-            }
+            // try {
+            const isUserFound = await this.db.query(this.query.searchAktivationLinkText, [aktivationLink]);
+            return isUserFound.rows[0].exists;
+            // } catch (error) {
+            // 	console.log('searchAktivationLink');
+            // 	console.log(error);
+            // }
         };
         this.setUserActivationTrue = async (aktivationLink) => {
             try {

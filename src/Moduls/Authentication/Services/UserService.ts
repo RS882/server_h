@@ -35,13 +35,10 @@ class UserService {
 		const regUser = new UserAuthDTO(regUserSQL);
 
 
-		const sendMail = await mailService.sendActivationLink(regUser.userEmail,
-			`${env.API_URL}/auth/activate/${uuidActivationLink}`);
+		//const sendMail = await mailService.sendActivationLink(regUser.userEmail,
+		//	`${env.API_URL}/auth/activate/${uuidActivationLink}`);
 
 		const userDTO = new UserDTO(regUser);
-
-		// const tt: UserAuthModel = { userEmail: '11', userId: 11, isActivated: true, userPassword: '11' }
-		// const dto2 = new UserDTO(tt)
 
 
 		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
@@ -54,14 +51,14 @@ class UserService {
 	};
 
 	aktivate = async (activationLink: string) => {
-		try {
-			const isActivationLinkFound = await userRepositoty.searchAktivationLink(activationLink);
-			// if (!isActivationLinkFound) throw new Error(errorMessage.INCORRECT_ACTIVATION_LINK);
-			const setAtivation = await userRepositoty.setUserActivationTrue(activationLink);
-		} catch (error) {
-			console.log(error);
+		// try {
+		const isActivationLinkFound = await userRepositoty.searchAktivationLink(activationLink);
+		if (!isActivationLinkFound) throw new Error(errorMessage.INCORRECT_ACTIVATION_LINK);
+		const setAtivation = await userRepositoty.setUserActivationTrue(activationLink);
+		// } catch (error) {
+		// 	console.log(error);
 
-		}
+		// }
 
 	};
 

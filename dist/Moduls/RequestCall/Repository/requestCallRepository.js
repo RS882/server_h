@@ -9,6 +9,7 @@ class RequestCallRepository {
             const res = await this.db.query(this.query.get + (requestCallId.id ? ` AND id=${requestCallId.id}` : `;`));
             return res.rows;
             // } catch (error) {
+            // 	console.log('get');
             // 	console.log(error);
             // 	return [];
             // };
@@ -18,6 +19,7 @@ class RequestCallRepository {
             const res = await this.db.query(this.query.post, [data.user_name, data.tel_number]);
             return res.rows;
             // } catch (error) {
+            // 	console.log('post');
             // 	console.log(error);
             // 	return [];
             // }
@@ -27,6 +29,7 @@ class RequestCallRepository {
             const res = await this.db.query(this.query.delete, [requestCallId.id]);
             return res.rows;
             // } catch (error) {
+            // 	console.log('delete');
             // 	console.log(error);
             // 	return [];
             // }
