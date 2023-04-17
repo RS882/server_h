@@ -50,7 +50,7 @@ class UserAuthController {
 	};
 	login = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-
+			res.json(['login'])
 		} catch (error) {
 
 		}
@@ -58,7 +58,7 @@ class UserAuthController {
 	};
 	logout = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-
+			res.json(['logout'])
 		} catch (error) {
 
 		}
@@ -86,7 +86,7 @@ class UserAuthController {
 	};
 	refresh = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-
+			res.json(['refresh'])
 		} catch (error) {
 
 		}

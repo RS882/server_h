@@ -11,6 +11,7 @@ import { getPhoneNumberRouter } from './Moduls/StartAppPayload/Routers/phoneNumb
 export const app = express();
 
 const jsonBodyMiddleware = express.json();
+
 app.use(jsonBodyMiddleware);
 app.use(cookieParser());
 
@@ -25,7 +26,6 @@ app.options('*', corsMiddleware);
 
 app.use('/phone_number', getPhoneNumberRouter());
 app.use('/citys_list', getCityListRouter());
-app.use('/request_call', getRequestCallRouter());
 app.use('/request_call', getRequestCallRouter());
 app.use('/auth', getAuthRouter());
 // app.use('/__test__', getTestsRouter(dbRequestCall));
