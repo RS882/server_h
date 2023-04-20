@@ -3,5 +3,6 @@ export const errorMessage = {
 	REPETITION_EMAIL: [`The user with email`, `has already been registered`],
 	INCORRECT_ACTIVATION_LINK: `Incorrect activation link`,
 	USER_UNAUTHORIZED: `The user is not authorized`,
-	SOME_ERROR: `Some error`,
+	UNFORESEEN_ERROR: `An unforeseen error`,
+
 }

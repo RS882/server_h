@@ -5,7 +5,7 @@ import { getRequestCallRouter } from './Moduls/RequestCall/Routers/RequestCallRo
 import cookieParser from 'cookie-parser';
 import { getAuthRouter } from './Moduls/Authentication/Routers/authenticationRouter';
 import { getPhoneNumberRouter } from './Moduls/StartAppPayload/Routers/phoneNumberRoute';
-
+import errorMiddleware from './middlewares/errorMiddleware';
 
 
 export const app = express();
@@ -30,6 +30,8 @@ app.use('/request_call', getRequestCallRouter());
 app.use('/auth', getAuthRouter());
 // app.use('/__test__', getTestsRouter(dbRequestCall));
 
+
+app.use(errorMiddleware);
 
 
 

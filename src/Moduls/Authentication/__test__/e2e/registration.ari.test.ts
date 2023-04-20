@@ -48,7 +48,14 @@ describe('/auth', () => {
 			.post('/auth/registration')
 			.send(payload)
 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
-		expect(getReq.text).toEqual(errorMessage.INVALID_CHATACTER);
+
+		expect(JSON.parse(getReq.text)).toEqual({
+			message: errorMessage.INVALID_CHATACTER,
+			errors: expect.any(Array),
+		}
+
+
+		);
 	};
 
 	it('POST: should return 400 and text  with intcorrect email ', async () => {
@@ -75,7 +82,7 @@ describe('/auth', () => {
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
-	it('POST: should retrurn 500 and error message  if email is duplicated', async () => {
+	it('POST: should retrurn 400 and error message  if email is duplicated', async () => {
 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 
 		const getReq1 = await request(app)
@@ -86,11 +93,36 @@ describe('/auth', () => {
 		const getReq2 = await request(app)
 			.post('/auth/registration')
 			.send(testData)
-			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-		expect(getReq2.text)
-			.toEqual(errorMessage.REPETITION_EMAIL[0] + ` ${testData.userEmail} ` + errorMessage.REPETITION_EMAIL[1]);
+			.expect(HTTP_STATUSES.BAD_REQUEST_400);
+		expect(JSON.parse(getReq2.text))
+			.toEqual({
+				message: errorMessage.REPETITION_EMAIL[0] + ` ${testData.userEmail} ` + errorMessage.REPETITION_EMAIL[1],
+				errors: [],
+			}
+
+			);
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
+
+	it('POST: should retrurn 400 and error message  if incorrect activation link', async () => {
+		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+		const getReq1 = await request(app)
+			.post('/auth/registration')
+			.send(testData)
+			.expect(HTTP_STATUSES.CREATED_201);
+		const getReqBodyUser = getReq1.body;
+		const getReq2 = await request(app)
+			.get('/auth/activate/1111')
+			.expect(HTTP_STATUSES.BAD_REQUEST_400);
+		expect(JSON.parse(getReq2.text))
+			.toEqual({
+				message: errorMessage.INCORRECT_ACTIVATION_LINK,
+				errors: [],
+			});
+		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+	});
+
+
 
 	it('POST: should retrurn 500  if some server error', async () => {
 		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);

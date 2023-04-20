@@ -14,7 +14,7 @@ export class APIError extends Error implements APIErrorModel {
 	static UnauthorizedError() {
 		return new APIError(HTTP_STATUSES.UNAUTHORIZED_401, errorMessage.USER_UNAUTHORIZED);
 	};
-	static BadRequest(message: string, errors = []) {
+	static BadRequest(message: string, errors: any = []) {
 		return new APIError(HTTP_STATUSES.BAD_REQUEST_400, message, errors);
 	};
 
