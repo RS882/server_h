@@ -198,4 +198,32 @@ describe('/auth', () => {
 				);
 			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 		});
+
+	// it('POST: should return 200 and jbject  if user correct logout ',
+	// 	async () => {
+	// 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+
+	// 		const getReq1 = await request(app)
+	// 			.post('/auth/registration')
+	// 			.send(testData)
+	// 			.expect(HTTP_STATUSES.CREATED_201);
+
+	// 		const getReqBodyUser = getReq1.body;
+
+	// 		const testData2: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'U&t8ii' };
+	// 		const getReq2 = await request(app)
+	// 			.post('/auth/logout')
+	// 			.send(testData2)
+	// 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
+	// 		expect(JSON.parse(getReq2.text))
+	// 			.toEqual({
+	// 				message: errorMessage.INCORRECT_PASSWORD,
+	// 				errors: [],
+	// 			}
+
+	// 			);
+	// 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+	// 	});
+
+
 });

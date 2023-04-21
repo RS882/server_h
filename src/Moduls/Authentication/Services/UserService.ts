@@ -14,6 +14,7 @@ import { UserAuthDTO } from "../DTOs/UserAuthDTO";
 import { errorMessage } from "../../../ErrorMessage/errorMessage";
 import { APIError } from "../../../Exceptions/APIError";
 import { log } from "console";
+import { TokenModel } from "../Models/TokenModel";
 
 
 
@@ -78,6 +79,12 @@ class UserService {
 		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
 		return { ...tokens, user: userDTO };
+	};
+
+	logout = async (refreshToken: string): Promise<TokenModel> => {
+		const token: TokenModel = await tokenService.removeToken(refreshToken);
+		return token;
+
 	}
 
 

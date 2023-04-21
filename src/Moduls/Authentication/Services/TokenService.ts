@@ -37,6 +37,13 @@ class TokenService {
 
 	};
 
+	removeToken = async (refreshToken: string): Promise<TokenModel> => {
+		const delToken: SQLTokenModel = await tokenRepositoty.deleteToken(refreshToken);
+
+		const token = new TokenDTO(delToken);
+		return token;
+	}
+
 }
 
 export const tokenService = new TokenService();

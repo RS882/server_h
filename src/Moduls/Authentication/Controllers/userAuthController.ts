@@ -53,13 +53,17 @@ class UserAuthController {
 	};
 	login = async (req: RequestWithBody<APIUserLoginModel>, res: Response, next: NextFunction) => {
 		try {
+
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()));
+
 			const logData = req.body;
 			const loginData: APIUserModel = await userService.login(logData);
 
 			res.cookie('refreshToken', loginData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
 				.status(HTTP_STATUSES.CREATED_201).json(loginData);
 			return;
-			// res.json(['login'])
+
 		} catch (error) {
 			next(error);
 		}
@@ -67,7 +71,11 @@ class UserAuthController {
 	};
 	logout = async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			res.json(['logout'])
+			const { refreshToken } = req.cookies;
+			const token = await userService.logout(refreshToken);
+			res.clearCookie('refreshToken');
+			res.status(HTTP_STATUSES.OK_200).json(token);
+			return;
 		} catch (error) {
 			next(error);
 		}

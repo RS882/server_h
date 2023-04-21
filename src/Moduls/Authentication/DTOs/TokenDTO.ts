@@ -11,9 +11,9 @@ export class TokenDTO implements TokenModel {
 
 	constructor(model: SQLTokenModel) {
 		this.id = model.id;
-		this.userId = model.userId;
-		this.refreshToken = model.refreshToken;
-		this.userIPAdress = model.userIPAdress;
+		this.userId = model.user_id;
+		this.refreshToken = model.refresh_token;
+		this.userIPAdress = model.user_ip_aderss;
 	}
 
 

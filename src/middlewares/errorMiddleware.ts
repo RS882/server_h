@@ -12,8 +12,8 @@ const errMiddleware = (err: APIError | Error, req: Request, res: Response, next:
 	}
 
 	res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500)
-		.json({ message: errorMessage.UNFORESEEN_ERROR });
-
+		// .json({ message: errorMessage.UNFORESEEN_ERROR });
+		.json({ message: err.message });
 }
 
 export default errMiddleware;

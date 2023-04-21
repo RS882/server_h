@@ -6,14 +6,15 @@ export interface SQLTokenModel {
 	/**
 *user ID  in the database
 */
-	userId: number;
+	user_id: number;
 	/**
 	 * refresh token
 	 */
-	refreshToken: string;
+	refresh_token: string;
 	/**
 	 * users IP adress
 	 */
-	userIPAdress: string;
+	user_ip_aderss: string;
 
 }
+

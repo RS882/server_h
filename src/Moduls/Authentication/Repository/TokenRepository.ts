@@ -11,7 +11,8 @@ class TokenRepositoty {
 		searchTokenText: string;
 		updateTokeText: string;
 		createToken: string;
-
+		deleteTokenText: string;
+		getTokenText: string;
 	}
 	constructor(dbSql: Pool) {
 		this.db = dbSql;
@@ -19,7 +20,8 @@ class TokenRepositoty {
 			searchTokenText: `SELECT EXISTS (SELECT * FROM token WHERE user_id = $1);`,
 			updateTokeText: `UPDATE token set refresh_token = $1 where user_id  = $2 RETURNING *;`,
 			createToken: `INSERT INTO token(refresh_token, user_id) values ($1, $2) RETURNING *;`,
-
+			deleteTokenText: `DELETE FROM token  where refresh_token = $1 RETURNING *;`,
+			getTokenText: `SELECT * FROM token WHERE refresh_token = $1;`,
 		}
 	};
 
@@ -58,6 +60,23 @@ class TokenRepositoty {
 		// }
 
 	};
+
+	deleteToken = async (refreshToken: string): Promise<SQLTokenModel> => {
+
+		// try {
+		const getDeletedToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.getTokenText, [refreshToken]);
+
+
+		const deleteToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.deleteTokenText, [refreshToken]);
+		return getDeletedToken.rows[0];
+
+		// } catch (error) {
+		// 	console.log('createToken');
+		// 	console.log(error);
+		// }
+
+	};
+
 }
 
 export const tokenRepositoty = new TokenRepositoty(db);
