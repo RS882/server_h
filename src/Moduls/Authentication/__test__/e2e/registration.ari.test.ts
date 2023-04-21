@@ -3,7 +3,7 @@ import { APIUserLoginModel } from "../../Models/APIModels/APIUserLoginModel";
 import { app } from "../../../../app";
 import { HTTP_STATUSES } from "../../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../../ErrorMessage/errorMessage";
-import { APIUserRegModel } from "../../Models/APIModels/APIUserRegModel";
+import { APIUserModel } from "../../Models/APIModels/APIUserRegModel";
 import { db } from "../../../../db/db";
 
 
@@ -70,19 +70,19 @@ describe('/auth', () => {
 		testData.userPassword = ' 122 tyyu ';
 		await setBadData(testData);
 	});
-	it('POST: should retrurn 201 and  user data with correct data', async () => {
+	it('POST: should return 201 and  user data with correct data', async () => {
 		const testData: APIUserLoginModel = { userEmail: '693ht2@iuo.com', userPassword: '12utrc345' };
 		const getReq = await request(app)
 			.post('/auth/registration')
 			.send(testData)
 			.expect(HTTP_STATUSES.CREATED_201);
-		const getReqBodyUser: APIUserRegModel = getReq.body;
+		const getReqBodyUser: APIUserModel = getReq.body;
 
 		expect(getReqBodyUser.user.email).toEqual(testData.userEmail);
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
-	it('POST: should retrurn 400 and error message  if email is duplicated', async () => {
+	it('POST: should return 400 and error message  if email is duplicated', async () => {
 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 
 		const getReq1 = await request(app)
@@ -104,7 +104,7 @@ describe('/auth', () => {
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
-	it('POST: should retrurn 400 and error message  if incorrect activation link', async () => {
+	it('POST: should return 400 and error message  if incorrect activation link', async () => {
 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 		const getReq1 = await request(app)
 			.post('/auth/registration')
@@ -122,9 +122,7 @@ describe('/auth', () => {
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
-
-
-	it('POST: should retrurn 500  if some server error', async () => {
+	it('POST: should return 500  if some server error', async () => {
 		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
 		const createUserAuthTestTab = await db.query(
 			`CREATE TABLE user11_auth(
@@ -141,8 +139,63 @@ describe('/auth', () => {
 			.send(testData)
 			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 		const delUserAuthTest2Tab = await db.query(`DROP TABLE IF EXISTS user11_auth cascade;`);
-
+		const createUserAuthTestTab1 = await db.query(
+			`CREATE TABLE user_auth(
+				id SERIAL PRIMARY KEY,
+				email VARCHAR(255) UNIQUE NOT NULL,
+				pasword VARCHAR(255) NOT NULL,
+				is_activated BOOLEAN DEFAULT false,
+				activation_link  VARCHAR(255)
+				);`)
 	});
 
+	it('POST: should return 400 and error message  if user with this email no found',
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 
+			const getReq1 = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getReqBodyUser = getReq1.body;
+			const testData2: APIUserLoginModel = { userEmail: 'yyyyy@u7po.zt', userPassword: 'U&t8ii' };
+			const getReq2 = await request(app)
+				.post('/auth/login')
+				.send(testData2)
+				.expect(HTTP_STATUSES.BAD_REQUEST_400);
+			expect(JSON.parse(getReq2.text))
+				.toEqual({
+					message: errorMessage.USER_NOT_FOUND,
+					errors: [],
+				}
+
+				);
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+		});
+
+	it('POST: should return 400 and error message  if user password incorrect',
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+
+			const getReq1 = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getReqBodyUser = getReq1.body;
+			const testData2: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'U&t8ii' };
+			const getReq2 = await request(app)
+				.post('/auth/login')
+				.send(testData2)
+				.expect(HTTP_STATUSES.BAD_REQUEST_400);
+			expect(JSON.parse(getReq2.text))
+				.toEqual({
+					message: errorMessage.INCORRECT_PASSWORD,
+					errors: [],
+				}
+
+				);
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+		});
 });

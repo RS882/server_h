@@ -12,6 +12,7 @@ class UserRepositoty {
 		searchUserDataText: string;
 		searchAktivationLinkText: string;
 		setActivationTruetext: string;
+		getUserDataText: string;
 
 	}
 	constructor(dbSql: Pool) {
@@ -21,7 +22,7 @@ class UserRepositoty {
 			insertUserData: `INSERT INTO user_auth(email, pasword, activation_link) values ($1,$2,$3) RETURNING *;`,
 			searchAktivationLinkText: `SELECT EXISTS (SELECT * FROM user_auth WHERE activation_link = $1) ;`,
 			setActivationTruetext: `UPDATE user_auth SET is_activated = true WHERE activation_link = $1;`,
-
+			getUserDataText: `SELECT * FROM user_auth WHERE email = $1`,
 		}
 	};
 
@@ -68,15 +69,25 @@ class UserRepositoty {
 	};
 
 	setUserActivationTrue = async (aktivationLink: string): Promise<void> => {
-		try {
+		// try {
+		const setActivation = await this.db.query(this.query.setActivationTruetext, [aktivationLink]);
 
-			const setActivation = await this.db.query(this.query.setActivationTruetext, [aktivationLink]);
+		// } catch (error) {
+		// 	console.log('setActivation');
 
-		} catch (error) {
-			console.log('setActivation');
+		// 	console.log(error);
+		// }
+	};
 
-			console.log(error);
-		}
+	getUserData = async (userEmail: string): Promise<SQLUserAuthModel> => {
+		// try {
+		const getData: QueryResult<SQLUserAuthModel> = await this.db.query(this.query.getUserDataText, [userEmail]);
+		return getData.rows[0];
+		// } catch (error) {
+		// 	console.log('addUserRedDataToSQL');
+
+		// 	console.log(error);
+		// }
 	}
 
 

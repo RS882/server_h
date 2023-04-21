@@ -1,7 +1,7 @@
 import { TokenGenerateModel } from "../TokenGenerateModel";
 import { UserDTOModel } from "../UserDTOModel";
 
-export interface APIUserRegModel extends TokenGenerateModel {
+export interface APIUserModel extends TokenGenerateModel {
 	user: UserDTOModel;
 
 }

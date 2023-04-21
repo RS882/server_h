@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import { RequestWithBody, RequestWithParams } from "../../../types";
 import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
-import { APIUserRegModel } from "../Models/APIModels/APIUserRegModel";
+import { APIUserModel } from "../Models/APIModels/APIUserRegModel";
 import { userService } from "../Services/UserService";
 import { HTTP_STATUSES } from "../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../ErrorMessage/errorMessage";
@@ -17,9 +17,8 @@ class UserAuthController {
 	registration = async (req: RequestWithBody<APIUserLoginModel>, res: Response, next: NextFunction) => {
 		try {
 			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				return next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()))
-			}
+			if (!errors.isEmpty()) next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()));
+
 			const reqUserData = req.body;
 			// if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(reqUserData.userEmail)) {
 			// 	res.status(HTTP_STATUSES.BAD_REQUEST_400).end(errorMessage.INVALID_CHATACTER);
@@ -30,7 +29,7 @@ class UserAuthController {
 			// 	return;
 			// };
 
-			const regData: APIUserRegModel = await userService.reg(reqUserData);
+			const regData: APIUserModel = await userService.reg(reqUserData);
 
 			// передаем в куку рефрештокен , его время жизни,  
 			//httpOnly: true и secure: true(для https) - запрет на получение куку из браузера с помощь JS 
@@ -52,9 +51,15 @@ class UserAuthController {
 		}
 
 	};
-	login = async (req: Request, res: Response, next: NextFunction) => {
+	login = async (req: RequestWithBody<APIUserLoginModel>, res: Response, next: NextFunction) => {
 		try {
-			res.json(['login'])
+			const logData = req.body;
+			const loginData: APIUserModel = await userService.login(logData);
+
+			res.cookie('refreshToken', loginData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+				.status(HTTP_STATUSES.CREATED_201).json(loginData);
+			return;
+			// res.json(['login'])
 		} catch (error) {
 			next(error);
 		}

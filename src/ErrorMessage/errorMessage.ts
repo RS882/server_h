@@ -4,5 +4,6 @@ export const errorMessage = {
 	INCORRECT_ACTIVATION_LINK: `Incorrect activation link`,
 	USER_UNAUTHORIZED: `The user is not authorized`,
 	UNFORESEEN_ERROR: `An unforeseen error`,
-
+	USER_NOT_FOUND: `User is not found`,
+	INCORRECT_PASSWORD: `Incorrect password`,
 }

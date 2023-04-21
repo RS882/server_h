@@ -6,7 +6,7 @@ import { mailService } from "./MailService";
 import { tokenService } from "./TokenService";
 import { UserDTO } from "../DTOs/UserDTO";
 import { env } from 'process';
-import { APIUserRegModel } from "../Models/APIModels/APIUserRegModel";
+import { APIUserModel } from "../Models/APIModels/APIUserRegModel";
 import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
 import { TokenGenerateModel } from "../Models/TokenGenerateModel";
 import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
@@ -18,16 +18,15 @@ import { log } from "console";
 
 
 
+
 class UserService {
 
-	reg = async (userRedData: APIUserLoginModel): Promise<APIUserRegModel> => {
+	reg = async (userRedData: APIUserLoginModel): Promise<APIUserModel> => {
 
 		const isUserFound = await userRepositoty.searchUserData(userRedData.userEmail);
 
 		if (isUserFound) throw APIError.BadRequest(
 			errorMessage.REPETITION_EMAIL[0] + ` ${userRedData.userEmail} ` + errorMessage.REPETITION_EMAIL[1]);
-
-
 
 		const hashPass: string = await bcrypt.hash(userRedData.userPassword, 3);// хешируем пароль для хранения в базе
 		const uuidActivationLink: string = uuidv4();// генерируем строку для активации емейла
@@ -38,17 +37,13 @@ class UserService {
 			activationLink: uuidActivationLink,
 		});
 		const regUser = new UserAuthDTO(regUserSQL);
-
+		const userDTO = new UserDTO(regUser);
+		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
+		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
 		//const sendMail = await mailService.sendActivationLink(regUser.userEmail,
 		//	`${env.API_URL}/auth/activate/${uuidActivationLink}`);
 
-		const userDTO = new UserDTO(regUser);
-
-
-		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
-
-		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
 		return { ...tokens, user: userDTO };
 
@@ -66,6 +61,24 @@ class UserService {
 		// }
 
 	};
+
+	login = async (logData: APIUserLoginModel): Promise<APIUserModel> => {
+
+		const isUserFound: boolean = await userRepositoty.searchUserData(logData.userEmail);
+		if (!isUserFound) throw APIError.BadRequest(errorMessage.USER_NOT_FOUND);
+
+		const userData: SQLUserAuthModel = await userRepositoty.getUserData(logData.userEmail);
+
+		const isPasswordEquil: boolean = await bcrypt.compare(logData.userPassword, userData.pasword);
+		if (!isPasswordEquil) throw APIError.BadRequest(errorMessage.INCORRECT_PASSWORD);
+
+		const regUser = new UserAuthDTO(userData);
+		const userDTO = new UserDTO(regUser);
+		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
+		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
+
+		return { ...tokens, user: userDTO };
+	}
 
 
 }
