@@ -5,6 +5,8 @@ import { HTTP_STATUSES } from "../../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../../ErrorMessage/errorMessage";
 import { APIUserModel } from "../../Models/APIModels/APIUserRegModel";
 import { db } from "../../../../db/db";
+import { log } from "console";
+import { body } from 'express-validator';
 
 
 
@@ -77,8 +79,13 @@ describe('/auth', () => {
 			.send(testData)
 			.expect(HTTP_STATUSES.CREATED_201);
 		const getReqBodyUser: APIUserModel = getReq.body;
-
 		expect(getReqBodyUser.user.email).toEqual(testData.userEmail);
+
+		const logout = await request(app)
+			.post('/auth/logout')
+			.set('Cookie', getReq.headers['set-cookie'])
+			.expect(HTTP_STATUSES.OK_200);
+
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
@@ -199,31 +206,35 @@ describe('/auth', () => {
 			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 		});
 
-	// it('POST: should return 200 and jbject  if user correct logout ',
-	// 	async () => {
-	// 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+	it('POST: should return 200 and object  if user correct logout ',
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
 
-	// 		const getReq1 = await request(app)
-	// 			.post('/auth/registration')
-	// 			.send(testData)
-	// 			.expect(HTTP_STATUSES.CREATED_201);
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
 
-	// 		const getReqBodyUser = getReq1.body;
+			const logout = await request(app)
+				.post('/auth/logout')
+				.set('Cookie', getLogin.headers['set-cookie'])
+				.expect(HTTP_STATUSES.OK_200);
 
-	// 		const testData2: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'U&t8ii' };
-	// 		const getReq2 = await request(app)
-	// 			.post('/auth/logout')
-	// 			.send(testData2)
-	// 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
-	// 		expect(JSON.parse(getReq2.text))
-	// 			.toEqual({
-	// 				message: errorMessage.INCORRECT_PASSWORD,
-	// 				errors: [],
-	// 			}
-
-	// 			);
-	// 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
-	// 	});
-
+			expect(logout.body)
+				.toEqual({
+					id: expect.any(Number),
+					userId: getLogin.body.user.id,
+					refreshToken: getLogin.body.refreshToken,
+					userIPAdress: null && expect.any(String),
+				});
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+		});
 
 });
+
+
+
