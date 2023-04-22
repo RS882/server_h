@@ -5,8 +5,7 @@ import { HTTP_STATUSES } from "../../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../../ErrorMessage/errorMessage";
 import { APIUserModel } from "../../Models/APIModels/APIUserRegModel";
 import { db } from "../../../../db/db";
-import { log } from "console";
-import { body } from 'express-validator';
+
 
 
 
@@ -78,6 +77,7 @@ describe('/auth', () => {
 			.post('/auth/registration')
 			.send(testData)
 			.expect(HTTP_STATUSES.CREATED_201);
+
 		const getReqBodyUser: APIUserModel = getReq.body;
 		expect(getReqBodyUser.user.email).toEqual(testData.userEmail);
 
@@ -233,6 +233,92 @@ describe('/auth', () => {
 				});
 			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
 		});
+
+
+	it('POST: should return 201 and  user data when  correct token refresh ',
+
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLoginBody: APIUserModel = getLogin.body;
+
+			const refreshData = await request(app)
+				.get('/auth/refresh')
+				.set('Cookie', getLogin.headers['set-cookie'])
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getReqBodyUser: APIUserModel = refreshData.body;
+			expect(getReqBodyUser.user).toEqual(getLoginBody.user);
+			expect(getReqBodyUser.accessToken).not.toEqual(getLoginBody.accessToken);
+			expect(getReqBodyUser.refreshToken).not.toEqual(getLoginBody.refreshToken);
+
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+		});
+
+	it('POST: should return 401 if refresh token incorrect ',
+
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLoginBody: APIUserModel = getLogin.body;
+
+			const refreshDataWithoutToken = await request(app)
+				.get('/auth/refresh')
+				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
+
+			const refreshDataWithIncorrectToken = await request(app)
+				.get('/auth/refresh')
+				.set('Cookie', 'iaoisjdl12i2i3')
+				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
+
+
+
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+		});
+
+
+	it('POST: should return 401 if refresh token correct but it is not in the database',
+
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const delTestTokenData = await db.query(`DELETE FROM token  where user_id = ${getReq.body.user.id};`);
+
+			const refreshData = await request(app)
+				.get('/auth/refresh')
+				.set('Cookie', getLogin.headers['set-cookie'])
+				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
+
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+		});
+
 
 });
 

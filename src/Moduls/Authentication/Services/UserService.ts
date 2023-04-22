@@ -15,6 +15,7 @@ import { errorMessage } from "../../../ErrorMessage/errorMessage";
 import { APIError } from "../../../Exceptions/APIError";
 import { log } from "console";
 import { TokenModel } from "../Models/TokenModel";
+import { tokenRepositoty } from "../Repository/TokenRepository";
 
 
 
@@ -84,7 +85,28 @@ class UserService {
 	logout = async (refreshToken: string): Promise<TokenModel> => {
 		const token: TokenModel = await tokenService.removeToken(refreshToken);
 		return token;
+	};
 
+	refresh = async (refreshToken: string): Promise<APIUserModel> => {
+
+
+		if (!refreshToken) throw APIError.UnauthorizedError();
+
+		const userDataAfterValidation = tokenService.validationRefreshToken(refreshToken);
+		if (!userDataAfterValidation) throw APIError.UnauthorizedError();
+
+		const isTokenFoundSuccess: boolean = await tokenRepositoty.searchTokenWithRefreshToken(refreshToken);
+		if (!isTokenFoundSuccess) throw APIError.UnauthorizedError();
+
+		const userData: SQLUserAuthModel =
+			await userRepositoty.getUserDataById(userDataAfterValidation);
+
+		const regUser = new UserAuthDTO(userData);
+		const userDTO = new UserDTO(regUser);
+		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
+		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
+
+		return { ...tokens, user: userDTO };
 	}
 
 

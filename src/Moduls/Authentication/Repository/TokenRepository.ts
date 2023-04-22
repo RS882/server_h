@@ -13,6 +13,7 @@ class TokenRepositoty {
 		createToken: string;
 		deleteTokenText: string;
 		getTokenText: string;
+		searchTokenWithRefreshTokenText: string;
 	}
 	constructor(dbSql: Pool) {
 		this.db = dbSql;
@@ -22,12 +23,27 @@ class TokenRepositoty {
 			createToken: `INSERT INTO token(refresh_token, user_id) values ($1, $2) RETURNING *;`,
 			deleteTokenText: `DELETE FROM token  where refresh_token = $1 RETURNING *;`,
 			getTokenText: `SELECT * FROM token WHERE refresh_token = $1;`,
+			searchTokenWithRefreshTokenText: `SELECT EXISTS (SELECT * FROM token WHERE refresh_token = $1);`,
 		}
 	};
 
 	searchToken = async (user_id: number): Promise<boolean> => {
 		// try {
 		const isTokenFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchTokenText, [user_id]);
+		return isTokenFound.rows[0].exists;
+		// } catch (error) {
+		// 	console.log('searchToken');
+		// 	console.log(error);
+
+		// }
+
+
+	};
+
+	searchTokenWithRefreshToken = async (refreshToken: string): Promise<boolean> => {
+		// try {
+		const isTokenFound: QueryResult<{ exists: boolean }> =
+			await this.db.query(this.query.searchTokenWithRefreshTokenText, [refreshToken]);
 		return isTokenFound.rows[0].exists;
 		// } catch (error) {
 		// 	console.log('searchToken');
@@ -66,12 +82,11 @@ class TokenRepositoty {
 		// try {
 		const getDeletedToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.getTokenText, [refreshToken]);
 
-
 		const deleteToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.deleteTokenText, [refreshToken]);
 		return getDeletedToken.rows[0];
 
 		// } catch (error) {
-		// 	console.log('createToken');
+		// 	console.log('deleteToken');
 		// 	console.log(error);
 		// }
 

@@ -8,14 +8,16 @@ import { tokenRepositoty } from '../Repository/TokenRepository';
 import { UserDTOModel } from '../Models/UserDTOModel';
 import { SQLTokenModel } from '../Models/SQLModels/SQLTokenModel';
 import { TokenDTO } from '../DTOs/TokenDTO';
+import { JwtPayload } from 'jsonwebtoken';
 
 
 
 class TokenService {
 
 	generateTokens = (payload: UserDTOModel): TokenGenerateModel => {
-		const accessToken: string = jwt.sign(payload, env.JWT_ACCESS_SECRET!, { expiresIn: '30m' });
-		const refreshToken: string = jwt.sign(payload, env.JWT_REFRESH_SECRET!, { expiresIn: '30d' });
+		const date = new Date();
+		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '30m' });
+		const refreshToken: string = jwt.sign({ ...payload, date: date }, env.JWT_REFRESH_SECRET!, { expiresIn: '30d' });
 		return { accessToken, refreshToken };
 	};
 
@@ -42,7 +44,28 @@ class TokenService {
 
 		const token = new TokenDTO(delToken);
 		return token;
-	}
+	};
+
+	validationAccessToken = (token: string): number | null => {
+		try {
+			const checkedToken: string | JwtPayload = jwt.verify(token, env.JWT_ACCESS_SECRET!);
+			return (typeof checkedToken === `object` && `id` in checkedToken) ?
+				checkedToken.id as number : null;
+		} catch (error) {
+			return null;
+		}
+	};
+
+	validationRefreshToken = (token: string): number | null => {
+		try {
+			const checkedToken: any = jwt.verify(token, env.JWT_REFRESH_SECRET!);
+			return (typeof checkedToken === `object` && `id` in checkedToken) ?
+				checkedToken.id as number : null;
+		} catch (error) {
+
+			return null;
+		}
+	};
 
 }
 
