@@ -16,7 +16,7 @@ class TokenService {
 
 	generateTokens = (payload: UserDTOModel): TokenGenerateModel => {
 		const date = new Date();
-		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '30m' });
+		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '30s' });
 		const refreshToken: string = jwt.sign({ ...payload, date: date }, env.JWT_REFRESH_SECRET!, { expiresIn: '30d' });
 		return { accessToken, refreshToken };
 	};
@@ -66,6 +66,8 @@ class TokenService {
 			return null;
 		}
 	};
+
+	searchToken = async (refreshToken: string): Promise<boolean> => await tokenRepositoty.searchTokenWithRefreshToken(refreshToken)
 
 }
 

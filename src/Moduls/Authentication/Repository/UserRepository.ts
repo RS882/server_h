@@ -14,6 +14,7 @@ class UserRepositoty {
 		setActivationTruetext: string;
 		getUserDataText: string;
 		getUserDataByIdText: string;
+		getAllUsersText: string;
 	}
 	constructor(dbSql: Pool) {
 		this.db = dbSql;
@@ -24,6 +25,7 @@ class UserRepositoty {
 			setActivationTruetext: `UPDATE user_auth SET is_activated = true WHERE activation_link = $1;`,
 			getUserDataText: `SELECT * FROM user_auth WHERE email = $1`,
 			getUserDataByIdText: `SELECT * FROM user_auth WHERE id = $1`,
+			getAllUsersText: `SELECT * FROM user_auth ;`
 		}
 	};
 
@@ -95,11 +97,21 @@ class UserRepositoty {
 		const getData: QueryResult<SQLUserAuthModel> = await this.db.query(this.query.getUserDataByIdText, [id]);
 		return getData.rows[0];
 		// } catch (error) {
-		// 	console.log('addUserRedDataToSQL');
+		// 	console.log('getUserDataById');
 
 		// 	console.log(error);
 		// }
-	}
+	};
+	getAllUsers = async (): Promise<SQLUserAuthModel[]> => {
+		// try {
+		const getData: QueryResult<SQLUserAuthModel> = await this.db.query(this.query.getAllUsersText);
+		return getData.rows;
+		// } catch (error) {
+		// 	console.log('getUserDataById');
+
+		// 	console.log(error);
+		// }
+	};
 
 
 }

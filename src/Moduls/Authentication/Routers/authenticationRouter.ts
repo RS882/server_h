@@ -1,6 +1,7 @@
 import express from 'express';
 import { userAuthController } from '../Controllers/userAuthController';
 import { body } from 'express-validator';
+import authMiddleware from '../../../middlewares/authMiddleware';
 
 
 
@@ -28,6 +29,6 @@ export const getAuthRouter = () => {
 	authRouter.post('/logout', userAuthController.logout);// логаут - удаления рефреш токена
 	authRouter.get('/activate/:link', userAuthController.activate);// получения ссылки для активации аккаунта
 	authRouter.get('/refresh', userAuthController.refresh);// перезапись акссес токена в случае его окончания(получение новой пвры акссес/рефреш)
-	authRouter.get('/users', userAuthController.users);
+	authRouter.get('/users', authMiddleware, userAuthController.users);
 	return authRouter;
 }

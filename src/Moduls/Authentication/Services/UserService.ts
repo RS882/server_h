@@ -16,6 +16,7 @@ import { APIError } from "../../../Exceptions/APIError";
 import { log } from "console";
 import { TokenModel } from "../Models/TokenModel";
 import { tokenRepositoty } from "../Repository/TokenRepository";
+import { UserDTOModel } from './../Models/UserDTOModel';
 
 
 
@@ -89,13 +90,12 @@ class UserService {
 
 	refresh = async (refreshToken: string): Promise<APIUserModel> => {
 
-
 		if (!refreshToken) throw APIError.UnauthorizedError();
 
 		const userDataAfterValidation = tokenService.validationRefreshToken(refreshToken);
 		if (!userDataAfterValidation) throw APIError.UnauthorizedError();
 
-		const isTokenFoundSuccess: boolean = await tokenRepositoty.searchTokenWithRefreshToken(refreshToken);
+		const isTokenFoundSuccess: boolean = await tokenService.searchToken(refreshToken);
 		if (!isTokenFoundSuccess) throw APIError.UnauthorizedError();
 
 		const userData: SQLUserAuthModel =
@@ -107,9 +107,18 @@ class UserService {
 		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
 		return { ...tokens, user: userDTO };
-	}
+	};
 
 
-}
+	getAllUsers = async (): Promise<UserDTOModel[]> => {
+
+		const allUsers: SQLUserAuthModel[] = await userRepositoty.getAllUsers();
+		const allUsersData: UserDTOModel[] = allUsers.map(e => new UserAuthDTO(e))
+			.map(e => new UserDTO(e));
+		return allUsersData;
+
+	};
+
+};
 
 export const userService = new UserService();

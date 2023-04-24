@@ -318,7 +318,29 @@ describe('/auth', () => {
 
 			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
 		});
+	it('POST: should return 401 if refresh token correct but it is not in the database',
 
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const delTestTokenData = await db.query(`DELETE FROM token  where user_id = ${getReq.body.user.id};`);
+
+			const refreshData = await request(app)
+				.get('/auth/refresh')
+				.set('Cookie', getLogin.headers['set-cookie'])
+				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
+
+			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+		});
 
 });
 
