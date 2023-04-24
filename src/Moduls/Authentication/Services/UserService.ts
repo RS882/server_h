@@ -7,7 +7,7 @@ import { tokenService } from "./TokenService";
 import { UserDTO } from "../DTOs/UserDTO";
 import { env } from 'process';
 import { APIUserModel } from "../Models/APIModels/APIUserRegModel";
-import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
+
 import { TokenGenerateModel } from "../Models/TokenGenerateModel";
 import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
 import { UserAuthDTO } from "../DTOs/UserAuthDTO";
@@ -15,14 +15,27 @@ import { errorMessage } from "../../../ErrorMessage/errorMessage";
 import { APIError } from "../../../Exceptions/APIError";
 
 import { TokenModel } from "../Models/TokenModel";
-import { tokenRepositoty } from "../Repository/TokenRepository";
+
 import { UserDTOModel } from './../Models/UserDTOModel';
+import { AktivateType, GetAllUsersType, IUserService, LogoutType, RefreshType, regOrLogServiceMethod } from './UserService.d';
 
 
-type regOrLogServiceMethod = (data: APIUserLoginModel) => Promise<APIUserModel>;
 
 
-class UserService {
+class UserService implements IUserService {
+
+	#getAPIUserModel = async (SQLdata: SQLUserAuthModel, activationLink?: string, isNeedToSendMail = false): Promise<APIUserModel> => {
+		const userData = new UserAuthDTO(SQLdata);
+		const userDTO = new UserDTO(userData);
+		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
+		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
+
+		if (isNeedToSendMail) await mailService.sendActivationLink({
+			to: userData.userEmail,
+			link: `${env.API_URL}/auth/activate/${activationLink}`
+		});
+		return { ...tokens, user: userDTO };
+	};
 
 	reg: regOrLogServiceMethod = async (userRedData) => {
 
@@ -39,21 +52,26 @@ class UserService {
 			userPassword: hashPass,
 			activationLink: uuidActivationLink,
 		});
-		const regUser = new UserAuthDTO(regUserSQL);
-		const userDTO = new UserDTO(regUser);
-		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
-		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
-		//const sendMail = await mailService.sendActivationLink(regUser.userEmail,
-		//	`${env.API_URL}/auth/activate/${uuidActivationLink}`);
+		// const regUser = new UserAuthDTO(regUserSQL);
+		// const userDTO = new UserDTO(regUser);
+		// const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
+		// const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
+
+		// const sendMail = await mailService.sendActivationLink({
+		// 	to: regUser.userEmail,
+		// 	link: `${env.API_URL}/auth/activate/${uuidActivationLink}`
+		// });
 
 
-		return { ...tokens, user: userDTO };
+		return await this.#getAPIUserModel(regUserSQL, uuidActivationLink
+			// , true
+		);
 
 
 	};
 
-	aktivate = async (activationLink: string) => {
+	aktivate: AktivateType = async (activationLink) => {
 		// try {
 		const isActivationLinkFound = await userRepositoty.searchAktivationLink(activationLink);
 		if (!isActivationLinkFound) throw APIError.BadRequest(errorMessage.INCORRECT_ACTIVATION_LINK);
@@ -75,20 +93,14 @@ class UserService {
 		const isPasswordEquil: boolean = await bcrypt.compare(logData.userPassword, userData.pasword);
 		if (!isPasswordEquil) throw APIError.BadRequest(errorMessage.INCORRECT_PASSWORD);
 
-		const regUser = new UserAuthDTO(userData);
-		const userDTO = new UserDTO(regUser);
-		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
-		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
-
-		return { ...tokens, user: userDTO };
+		return await this.#getAPIUserModel(userData);
 	};
 
-	logout = async (refreshToken: string): Promise<TokenModel> => {
-		const token: TokenModel = await tokenService.removeToken(refreshToken);
-		return token;
+	logout: LogoutType = async (refreshToken) => {
+		return await tokenService.removeToken(refreshToken);
 	};
 
-	refresh = async (refreshToken: string): Promise<APIUserModel> => {
+	refresh: RefreshType = async (refreshToken) => {
 
 		if (!refreshToken) throw APIError.UnauthorizedError();
 
@@ -101,16 +113,12 @@ class UserService {
 		const userData: SQLUserAuthModel =
 			await userRepositoty.getUserDataById(userDataAfterValidation);
 
-		const regUser = new UserAuthDTO(userData);
-		const userDTO = new UserDTO(regUser);
-		const tokens: TokenGenerateModel = tokenService.generateTokens({ ...userDTO })
-		const saveRefreshToken = await tokenService.saveToken(userDTO.id, tokens.refreshToken);
 
-		return { ...tokens, user: userDTO };
+		return await this.#getAPIUserModel(userData);
 	};
 
 
-	getAllUsers = async (): Promise<UserDTOModel[]> => {
+	getAllUsers: GetAllUsersType = async () => {
 
 		const allUsers: SQLUserAuthModel[] = await userRepositoty.getAllUsers();
 		const allUsersData: UserDTOModel[] = allUsers.map(e => new UserAuthDTO(e))
