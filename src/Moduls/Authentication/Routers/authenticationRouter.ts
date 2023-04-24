@@ -12,18 +12,20 @@ export const getAuthRouter = () => {
 
 	const authRouter = express.Router();
 
+	const getPasswordValidator = () => body('userPassword')
+		.isLength({ min: 3, max: 32 })
+		.custom((value: string) => value && !value.includes(' '));
+
+	const getEmailValidator = () => body('userEmail').isEmail();
+
 	authRouter.post('/registration',
-		body('userEmail').isEmail(),
-		body('userPassword')
-			.isLength({ min: 3, max: 32 })
-			.custom((value: string) => value && !value.includes(' ')),
+		getEmailValidator(),
+		getPasswordValidator(),
 		userAuthController.registration);// регистарция
 
 	authRouter.post('/login',
-		body('userEmail').isEmail(),
-		body('userPassword')
-			.isLength({ min: 3, max: 32 })
-			.custom((value: string) => value && !value.includes(' ')),
+		getEmailValidator(),
+		getPasswordValidator(),
 		userAuthController.login);// логин
 
 	authRouter.post('/logout', userAuthController.logout);// логаут - удаления рефреш токена

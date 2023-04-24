@@ -1,17 +1,13 @@
-
-import { ActivationLinkModel } from "../Models/ActivationLinkModel";
-
 import { env } from 'process';
-import nodemailer from "nodemailer";
+import { createTransport } from "nodemailer";
+import { sendActivationLinkType, IMailsService } from './MailService.d';
 
-
-
-class MailService {
+class MailService implements IMailsService {
 
 	transporter;
 
 	constructor() {
-		this.transporter = nodemailer.createTransport({
+		this.transporter = createTransport({
 			host: env.SMTPT_HOST,
 			port: +env.SMPT_PORT!,
 			secure: false, // true for 465, false for other ports
@@ -22,34 +18,25 @@ class MailService {
 			},
 		})
 	};
-
-
-
-
-	sendActivationLink = async (to: ActivationLinkModel['to'],
-		link: ActivationLinkModel['link']): Promise<void> => {
-		try {
-			const sendMail = await this.transporter.sendMail({
-				from: env.SMPT_USER,
-				to,
-				subject: `Activation of the account on ${env.API_URL}`,
-				text: ``,
-				html: `
+	sendActivationLink: sendActivationLinkType = async ({ to, link }) => {
+		// try {
+		const sendMail = await this.transporter.sendMail({
+			from: env.SMPT_USER,
+			to,
+			subject: `Activation of the account on ${env.API_URL}`,
+			text: ``,
+			html: `
 			<div>
 				<h1> For activation, follow the link</h1>
 				<a href="${link}">${link} </a>
 			</div>
 			`,
+		})
 
+		// } catch (error) {
+		// 	console.log(error);
 
-			})
-			// console.log(sendMail);
-		} catch (error) {
-			console.log(error);
-
-		}
-
-
+		// }
 
 	};
 }

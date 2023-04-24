@@ -13,18 +13,18 @@ import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
 import { UserAuthDTO } from "../DTOs/UserAuthDTO";
 import { errorMessage } from "../../../ErrorMessage/errorMessage";
 import { APIError } from "../../../Exceptions/APIError";
-import { log } from "console";
+
 import { TokenModel } from "../Models/TokenModel";
 import { tokenRepositoty } from "../Repository/TokenRepository";
 import { UserDTOModel } from './../Models/UserDTOModel';
 
 
-
+type regOrLogServiceMethod = (data: APIUserLoginModel) => Promise<APIUserModel>;
 
 
 class UserService {
 
-	reg = async (userRedData: APIUserLoginModel): Promise<APIUserModel> => {
+	reg: regOrLogServiceMethod = async (userRedData) => {
 
 		const isUserFound = await userRepositoty.searchUserData(userRedData.userEmail);
 
@@ -65,7 +65,7 @@ class UserService {
 
 	};
 
-	login = async (logData: APIUserLoginModel): Promise<APIUserModel> => {
+	login: regOrLogServiceMethod = async (logData) => {
 
 		const isUserFound: boolean = await userRepositoty.searchUserData(logData.userEmail);
 		if (!isUserFound) throw APIError.BadRequest(errorMessage.USER_NOT_FOUND);

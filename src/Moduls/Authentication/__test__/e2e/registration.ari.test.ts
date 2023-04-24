@@ -129,32 +129,7 @@ describe('/auth', () => {
 		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
 	});
 
-	it('POST: should return 500  if some server error', async () => {
-		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
-		const createUserAuthTestTab = await db.query(
-			`CREATE TABLE user11_auth(
-				id SERIAL PRIMARY KEY,
-				email VARCHAR(255) UNIQUE NOT NULL,
-				pasword VARCHAR(255) NOT NULL,
-				is_activated BOOLEAN DEFAULT false,
-				activation_link  VARCHAR(255)
-				);`
-		);
-		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
-		await request(app)
-			.post('/auth/registration')
-			.send(testData)
-			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-		const delUserAuthTest2Tab = await db.query(`DROP TABLE IF EXISTS user11_auth cascade;`);
-		const createUserAuthTestTab1 = await db.query(
-			`CREATE TABLE user_auth(
-				id SERIAL PRIMARY KEY,
-				email VARCHAR(255) UNIQUE NOT NULL,
-				pasword VARCHAR(255) NOT NULL,
-				is_activated BOOLEAN DEFAULT false,
-				activation_link  VARCHAR(255)
-				);`)
-	});
+
 
 	it('POST: should return 400 and error message  if user with this email no found',
 		async () => {
@@ -341,6 +316,35 @@ describe('/auth', () => {
 
 			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
 		});
+
+
+	it('POST: should return 500  if some server error', async () => {
+		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
+		// const TEST_DB_NAME = `user18_auth`;
+		// const createUserAuthTestTab = await db.query(
+		// 	`CREATE TABLE ${TEST_DB_NAME}(
+		// 		id SERIAL PRIMARY KEY,
+		// 		email VARCHAR(255) UNIQUE NOT NULL,
+		// 		pasword VARCHAR(255) NOT NULL,
+		// 		is_activated BOOLEAN DEFAULT false,
+		// 		activation_link  VARCHAR(255)
+		// 		);`
+		// );
+		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+		await request(app)
+			.post('/auth/registration')
+			.send(testData)
+			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
+		// const delUserAuthTest2Tab = await db.query(`DROP TABLE IF EXISTS ${TEST_DB_NAME} cascade;`);
+		// const createUserAuthTestTab1 = await db.query(
+		// 	`CREATE TABLE user_auth(
+		// 		id SERIAL PRIMARY KEY,
+		// 		email VARCHAR(255) UNIQUE NOT NULL,
+		// 		pasword VARCHAR(255) NOT NULL,
+		// 		is_activated BOOLEAN DEFAULT false,
+		// 		activation_link  VARCHAR(255)
+		// 		);`)
+	});
 
 });
 

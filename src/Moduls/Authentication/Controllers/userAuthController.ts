@@ -1,5 +1,5 @@
 
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { RequestWithBody, RequestWithParams } from "../../../types";
 import { APIUserLoginModel } from "../Models/APIModels/APIUserLoginModel";
 import { APIUserModel } from "../Models/APIModels/APIUserRegModel";
@@ -10,69 +10,56 @@ import { validationResult } from 'express-validator';
 import { LinkParamsModel } from "../Models/LinkParamsModel";
 import { env } from 'process';
 import { APIError } from "../../../Exceptions/APIError";
+import { TokenModel } from "../Models/TokenModel";
+import { ControllerMethod, IUserAuthController } from './userAuthController.d';
 
 
-class UserAuthController {
 
-	registration = async (req: RequestWithBody<APIUserLoginModel>, res: Response, next: NextFunction) => {
-		try {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()));
+class UserAuthController implements IUserAuthController {
 
-			const reqUserData = req.body;
-			// if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(reqUserData.userEmail)) {
-			// 	res.status(HTTP_STATUSES.BAD_REQUEST_400).end(errorMessage.INVALID_CHATACTER);
-			// 	return;
-			// };
-			// if (!reqUserData.userPassword || reqUserData.userPassword.includes(' ')) {
-			// 	res.status(HTTP_STATUSES.BAD_REQUEST_400).end(errorMessage.INVALID_CHATACTER);
-			// 	return;
-			// };
 
-			const regData: APIUserModel = await userService.reg(reqUserData);
-
-			// передаем в куку рефрештокен , его время жизни,  
-			//httpOnly: true и secure: true(для https) - запрет на получение куку из браузера с помощь JS 
-			res.cookie('refreshToken', regData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
-				.status(HTTP_STATUSES.CREATED_201).json(regData);
-			return;
-
-		} catch (error) {
-			// console.log(error);
-			// if (error.message.includes(`The user with email`)) {
-			// 	res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
-			// 	return;
-
-			// } else {
-			// 	res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-			// 	return;
-			// }
-			next(error);
-		}
-
+	#setStatus201AndUserDataAndCookie = (res: Response, data: APIUserModel) => {
+		// передаем в куку рефрештокен , его время жизни,  
+		//httpOnly: true и secure: true(для https) - запрет на получение куку из браузера с помощь JS 
+		res.cookie('refreshToken', data.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+			.status(HTTP_STATUSES.CREATED_201).json(data);
 	};
-	login = async (req: RequestWithBody<APIUserLoginModel>, res: Response, next: NextFunction) => {
+
+	#registrationOrLoginFunc = async (req: RequestWithBody<APIUserLoginModel>, res: Response,
+		next: NextFunction,
+		func: (data: APIUserLoginModel) => Promise<APIUserModel>): Promise<void> => {
+
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()));
+
+		const userData: APIUserLoginModel = req.body;
+		const data: APIUserModel = await func(userData);
+
+		this.#setStatus201AndUserDataAndCookie(res, data);
+	};
+
+	registration: ControllerMethod<RequestWithBody<APIUserLoginModel>> = async (req, res, next) => {
 		try {
-
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) next(APIError.BadRequest(errorMessage.INVALID_CHATACTER, errors.array()));
-
-			const logData = req.body;
-			const loginData: APIUserModel = await userService.login(logData);
-
-			res.cookie('refreshToken', loginData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
-				.status(HTTP_STATUSES.CREATED_201).json(loginData);
+			await this.#registrationOrLoginFunc(req, res, next, userService.reg);
 			return;
-
 		} catch (error) {
 			next(error);
 		}
 
 	};
-	logout = async (req: Request, res: Response, next: NextFunction) => {
+	login: ControllerMethod<RequestWithBody<APIUserLoginModel>> = async (req, res, next) => {
+		try {
+			await this.#registrationOrLoginFunc(req, res, next, userService.login);
+			return;
+		} catch (error) {
+			next(error);
+		}
+
+	};
+	logout: ControllerMethod = async (req, res, next) => {
 		try {
 			const { refreshToken } = req.cookies;
-			const token = await userService.logout(refreshToken);
+			const token: TokenModel = await userService.logout(refreshToken);
 			res.clearCookie('refreshToken');
 			res.status(HTTP_STATUSES.OK_200).json(token);
 			return;
@@ -81,41 +68,29 @@ class UserAuthController {
 		}
 
 	};
-	activate = async (req: RequestWithParams<LinkParamsModel>, res: Response, next: NextFunction) => {
+	activate: ControllerMethod<RequestWithParams<LinkParamsModel>> = async (req, res, next) => {
 		try {
-			const activeLink = req.params.link;
+			const activeLink: string = req.params.link;
 			await userService.aktivate(activeLink);
 			res.status(302).redirect(env.CLIENT_URL!)
 			return;
 		} catch (error) {
-
 			next(error)
-			// if (error.message === errorMessage.INCORRECT_ACTIVATION_LINK) {
-			// 	res.status(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500).end(error.message);
-			// 	return;
-
-			// } else {
-			// 	res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-			// 	return;
-			// }
-
 		}
 
 	};
-	refresh = async (req: Request, res: Response, next: NextFunction) => {
+	refresh: ControllerMethod = async (req, res, next) => {
 		try {
 			const { refreshToken } = req.cookies;
-
-			const userData = await userService.refresh(refreshToken);
-			res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
-				.status(HTTP_STATUSES.CREATED_201).json(userData);
+			const userData: APIUserModel = await userService.refresh(refreshToken);
+			this.#setStatus201AndUserDataAndCookie(res, userData);
 			return;
 		} catch (error) {
 			next(error);
 		}
 
 	};
-	users = async (req: Request, res: Response, next: NextFunction) => {
+	users: ControllerMethod = async (req, res, next) => {
 		try {
 			const usersData = await userService.getAllUsers();
 			res.json(usersData)
@@ -124,8 +99,6 @@ class UserAuthController {
 		}
 
 	};
-
-
 
 };
 

@@ -1,73 +1,66 @@
 import jwt from 'jsonwebtoken';
 import { env } from 'process';
-import { TokenGenerateModel } from '../Models/TokenGenerateModel';
 import { TokenModel } from '../Models/TokenModel';
-
 import { tokenRepositoty } from '../Repository/TokenRepository';
-
-import { UserDTOModel } from '../Models/UserDTOModel';
 import { SQLTokenModel } from '../Models/SQLModels/SQLTokenModel';
 import { TokenDTO } from '../DTOs/TokenDTO';
 import { JwtPayload } from 'jsonwebtoken';
+import { updateOrCreateTokenType } from '../Repository/TokenRespository';
+import { GenerateTokensType, ITokenService, RemoveTokenType, SaveTokenType, SearchTokenType, ValidatinTokenType } from './TokenService.d';
 
 
 
-class TokenService {
+class TokenService implements ITokenService {
 
-	generateTokens = (payload: UserDTOModel): TokenGenerateModel => {
+	#validationToken = (token: string, key: string): number | null => {
+		const checkedToken: string | JwtPayload = jwt.verify(token, key);
+		return (typeof checkedToken === `object` && `id` in checkedToken) ?
+			checkedToken.id as number : null;
+	};
+
+	generateTokens: GenerateTokensType = (payload) => {
 		const date = new Date();
 		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '30s' });
 		const refreshToken: string = jwt.sign({ ...payload, date: date }, env.JWT_REFRESH_SECRET!, { expiresIn: '30d' });
 		return { accessToken, refreshToken };
 	};
 
-	saveToken = async (userId: TokenModel['userId'], refreshToken: TokenModel['refreshToken']): Promise<string> => {
-
+	saveToken: SaveTokenType = async (userId, refreshToken) => {
 		const isTokenFoundInDB: boolean | undefined = await tokenRepositoty.searchToken(userId);
-
-		let token: string;
-		if (isTokenFoundInDB!) {
-			const updateTokenInSQL: SQLTokenModel = await tokenRepositoty.updateToken({ userId, refreshToken });
-			const updatedToken = new TokenDTO(updateTokenInSQL);
-			token = updatedToken.refreshToken;
-		} else {
-			const createTokenInSQL: SQLTokenModel = await tokenRepositoty.createToken({ userId, refreshToken });
-			const createdToken = new TokenDTO(createTokenInSQL);
-			token = createdToken.refreshToken;
-		}
-		return token;
+		const updatedOrCreatedToken = async (func: updateOrCreateTokenType,
+			id = userId, token = refreshToken): Promise<string> => {
+			const tokenInSQL: SQLTokenModel = await func(id, token);
+			const tokenAPI: TokenModel = new TokenDTO(tokenInSQL);
+			return tokenAPI.refreshToken;
+		};
+		return await updatedOrCreatedToken(tokenRepositoty[isTokenFoundInDB! ? 'updateToken' : 'createToken']);
 
 	};
 
-	removeToken = async (refreshToken: string): Promise<TokenModel> => {
+	removeToken: RemoveTokenType = async (refreshToken) => {
 		const delToken: SQLTokenModel = await tokenRepositoty.deleteToken(refreshToken);
-
-		const token = new TokenDTO(delToken);
-		return token;
+		const tokens: TokenModel = new TokenDTO(delToken);
+		return tokens;
 	};
 
-	validationAccessToken = (token: string): number | null => {
+	validationAccessToken: ValidatinTokenType = (token) => {
 		try {
-			const checkedToken: string | JwtPayload = jwt.verify(token, env.JWT_ACCESS_SECRET!);
-			return (typeof checkedToken === `object` && `id` in checkedToken) ?
-				checkedToken.id as number : null;
+			return this.#validationToken(token, env.JWT_ACCESS_SECRET!)
 		} catch (error) {
 			return null;
 		}
 	};
 
-	validationRefreshToken = (token: string): number | null => {
+	validationRefreshToken: ValidatinTokenType = (token) => {
 		try {
-			const checkedToken: any = jwt.verify(token, env.JWT_REFRESH_SECRET!);
-			return (typeof checkedToken === `object` && `id` in checkedToken) ?
-				checkedToken.id as number : null;
+			return this.#validationToken(token, env.JWT_REFRESH_SECRET!)
 		} catch (error) {
-
 			return null;
 		}
 	};
 
-	searchToken = async (refreshToken: string): Promise<boolean> => await tokenRepositoty.searchTokenWithRefreshToken(refreshToken)
+	searchToken: SearchTokenType = async (refreshToken) =>
+		await tokenRepositoty.searchTokenWithRefreshToken(refreshToken);
 
 }
 

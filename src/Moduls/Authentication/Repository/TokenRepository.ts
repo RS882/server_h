@@ -1,9 +1,11 @@
 import { Pool, QueryResult } from "pg";
 import { db } from "../../../db/db";
 
-import { TokenModel } from "../Models/TokenModel";
-
 import { SQLTokenModel } from "../Models/SQLModels/SQLTokenModel";
+import { updateOrCreateTokenType } from "./TokenRespository";
+
+
+
 
 class TokenRepositoty {
 	db: Pool;
@@ -54,7 +56,7 @@ class TokenRepositoty {
 
 	};
 
-	updateToken = async ({ userId, refreshToken }: TokenModel): Promise<SQLTokenModel> => {
+	updateToken: updateOrCreateTokenType = async (userId, refreshToken) => {
 		// try {
 		const upToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.updateTokeText, [refreshToken, userId]);
 		return upToken.rows[0];
@@ -65,7 +67,7 @@ class TokenRepositoty {
 
 
 	};
-	createToken = async ({ userId, refreshToken }: TokenModel): Promise<SQLTokenModel> => {
+	createToken: updateOrCreateTokenType = async (userId, refreshToken) => {
 		// try {
 		const createToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.createToken, [refreshToken, userId]);
 		return createToken.rows[0];
