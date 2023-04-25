@@ -93,7 +93,7 @@ class UserAuthController implements IUserAuthController {
 	users: ControllerMethod = async (req, res, next) => {
 		try {
 			const usersData = await userService.getAllUsers();
-			res.json(usersData)
+			res.status(HTTP_STATUSES.OK_200).json(usersData)
 		} catch (error) {
 			next(error);
 		}

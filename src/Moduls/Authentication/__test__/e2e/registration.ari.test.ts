@@ -5,10 +5,7 @@ import { HTTP_STATUSES } from "../../../../HTTP_Status/HTTP_Status";
 import { errorMessage } from "../../../../ErrorMessage/errorMessage";
 import { APIUserModel } from "../../Models/APIModels/APIUserRegModel";
 import { db } from "../../../../db/db";
-
-
-
-
+import { UserDTOModel } from "../../Models/UserDTOModel";
 
 
 
@@ -39,8 +36,9 @@ describe('/auth', () => {
 	afterAll(async () => {
 		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
 		const delTokenTestTab = await db.query(`DROP TABLE IF EXISTS token;`);
-
-
+	});
+	afterEach(async () => {
+		const delTestData = await db.query(`TRUNCATE  user_auth CASCADE;`);
 	});
 
 
@@ -50,7 +48,7 @@ describe('/auth', () => {
 			.send(payload)
 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
 
-		expect(JSON.parse(getReq.text)).toEqual({
+		expect(getReq.body).toEqual({
 			message: errorMessage.INVALID_CHATACTER,
 			errors: expect.any(Array),
 		}
@@ -86,7 +84,7 @@ describe('/auth', () => {
 			.set('Cookie', getReq.headers['set-cookie'])
 			.expect(HTTP_STATUSES.OK_200);
 
-		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+
 	});
 
 	it('POST: should return 400 and error message  if email is duplicated', async () => {
@@ -101,14 +99,16 @@ describe('/auth', () => {
 			.post('/auth/registration')
 			.send(testData)
 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
-		expect(JSON.parse(getReq2.text))
+
+
+		expect(getReq2.body)
 			.toEqual({
 				message: errorMessage.REPETITION_EMAIL[0] + ` ${testData.userEmail} ` + errorMessage.REPETITION_EMAIL[1],
 				errors: [],
 			}
 
 			);
-		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+
 	});
 
 	it('POST: should return 400 and error message  if incorrect activation link', async () => {
@@ -121,12 +121,12 @@ describe('/auth', () => {
 		const getReq2 = await request(app)
 			.get('/auth/activate/1111')
 			.expect(HTTP_STATUSES.BAD_REQUEST_400);
-		expect(JSON.parse(getReq2.text))
+		expect(getReq2.body)
 			.toEqual({
 				message: errorMessage.INCORRECT_ACTIVATION_LINK,
 				errors: [],
 			});
-		const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+
 	});
 
 
@@ -146,14 +146,14 @@ describe('/auth', () => {
 				.post('/auth/login')
 				.send(testData2)
 				.expect(HTTP_STATUSES.BAD_REQUEST_400);
-			expect(JSON.parse(getReq2.text))
+			expect(getReq2.body)
 				.toEqual({
 					message: errorMessage.USER_NOT_FOUND,
 					errors: [],
 				}
 
 				);
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+
 		});
 
 	it('POST: should return 400 and error message  if user password incorrect',
@@ -171,14 +171,14 @@ describe('/auth', () => {
 				.post('/auth/login')
 				.send(testData2)
 				.expect(HTTP_STATUSES.BAD_REQUEST_400);
-			expect(JSON.parse(getReq2.text))
+			expect(getReq2.body)
 				.toEqual({
 					message: errorMessage.INCORRECT_PASSWORD,
 					errors: [],
 				}
 
 				);
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReqBodyUser.user.id};`);
+
 		});
 
 	it('POST: should return 200 and object  if user correct logout ',
@@ -206,11 +206,11 @@ describe('/auth', () => {
 					refreshToken: getLogin.body.refreshToken,
 					userIPAdress: null && expect.any(String),
 				});
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+
 		});
 
 
-	it('POST: should return 201 and  user data when  correct token refresh ',
+	it('GET: should return 201 and  user data when  correct token refresh ',
 
 		async () => {
 			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
@@ -236,10 +236,10 @@ describe('/auth', () => {
 			expect(getReqBodyUser.accessToken).not.toEqual(getLoginBody.accessToken);
 			expect(getReqBodyUser.refreshToken).not.toEqual(getLoginBody.refreshToken);
 
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
+
 		});
 
-	it('POST: should return 401 if refresh token incorrect ',
+	it('GET: should return 401 if refresh token incorrect ',
 
 		async () => {
 			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
@@ -265,12 +265,10 @@ describe('/auth', () => {
 				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
 
 
-
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
 		});
 
 
-	it('POST: should return 401 if refresh token correct but it is not in the database',
+	it('GET: should return 401 if refresh token correct but it is not in the database',
 
 		async () => {
 			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
@@ -284,17 +282,16 @@ describe('/auth', () => {
 				.send(testData)
 				.expect(HTTP_STATUSES.CREATED_201);
 
-			const delTestTokenData = await db.query(`DELETE FROM token  where user_id = ${getReq.body.user.id};`);
+			const delTestTokenData = await db.query(`TRUNCATE token CASCADE;`);
 
 			const refreshData = await request(app)
 				.get('/auth/refresh')
 				.set('Cookie', getLogin.headers['set-cookie'])
 				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
 
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
-		});
-	it('POST: should return 401 if refresh token correct but it is not in the database',
 
+		});
+	it('GET: should return 401 if refresh token correct but it is not in the database',
 		async () => {
 			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 			const getReq = await request(app)
@@ -307,43 +304,57 @@ describe('/auth', () => {
 				.send(testData)
 				.expect(HTTP_STATUSES.CREATED_201);
 
-			const delTestTokenData = await db.query(`DELETE FROM token  where user_id = ${getReq.body.user.id};`);
+			const delTestTokenData = await db.query(`TRUNCATE token CASCADE;`);
 
 			const refreshData = await request(app)
 				.get('/auth/refresh')
 				.set('Cookie', getLogin.headers['set-cookie'])
 				.expect(HTTP_STATUSES.UNAUTHORIZED_401);
 
-			const delTestData = await db.query(`DELETE FROM user_auth  where id = ${getReq.body.user.id};`);
 		});
 
+	it('GET: should return 401 if headres without authorization',
+		async () => {
+			const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
+			const getReq = await request(app)
+				.post('/auth/registration')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const getLogin = await request(app)
+				.post('/auth/login')
+				.send(testData)
+				.expect(HTTP_STATUSES.CREATED_201);
+
+			const accessToken = getLogin.body.accessToken
+			const refreshData = await request(app)
+				.get('/auth/users')
+				.set('Authorization', `Bearer ${accessToken}`)
+				.expect(HTTP_STATUSES.OK_200);
+
+			const getReqBodyUser: UserDTOModel[] = refreshData.body;
+			expect(getReqBodyUser[0].email).toEqual(testData.userEmail);
+
+		});
 
 	it('POST: should return 500  if some server error', async () => {
 		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
-		// const TEST_DB_NAME = `user18_auth`;
-		// const createUserAuthTestTab = await db.query(
-		// 	`CREATE TABLE ${TEST_DB_NAME}(
-		// 		id SERIAL PRIMARY KEY,
-		// 		email VARCHAR(255) UNIQUE NOT NULL,
-		// 		pasword VARCHAR(255) NOT NULL,
-		// 		is_activated BOOLEAN DEFAULT false,
-		// 		activation_link  VARCHAR(255)
-		// 		);`
-		// );
+
 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 		await request(app)
 			.post('/auth/registration')
 			.send(testData)
 			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
-		// const delUserAuthTest2Tab = await db.query(`DROP TABLE IF EXISTS ${TEST_DB_NAME} cascade;`);
-		// const createUserAuthTestTab1 = await db.query(
-		// 	`CREATE TABLE user_auth(
-		// 		id SERIAL PRIMARY KEY,
-		// 		email VARCHAR(255) UNIQUE NOT NULL,
-		// 		pasword VARCHAR(255) NOT NULL,
-		// 		is_activated BOOLEAN DEFAULT false,
-		// 		activation_link  VARCHAR(255)
-		// 		);`)
+
+		const createUserAuthTestTab = await db.query(
+			`CREATE TABLE user_auth(
+					id SERIAL PRIMARY KEY,
+					email VARCHAR(255) UNIQUE NOT NULL,
+					pasword VARCHAR(255) NOT NULL,
+					is_activated BOOLEAN DEFAULT false,
+					activation_link  VARCHAR(255)
+					);`
+		);
 	});
 
 });
