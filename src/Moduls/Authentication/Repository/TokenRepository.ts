@@ -24,64 +24,30 @@ class TokenRepositoty extends SQLQuerys {
 	};
 
 
-	searchToken = async (field: number): Promise<boolean> => {
-		const fieldName = this.dbFieldsName.USER_ID;
-		// try {
-		return await this.#searchByField(fieldName, field);
-
-		// } catch (error) {
-		// 	console.log('searchToken');
-		// 	console.log(error);
-
-		// }
+	searchToken = async (id: number): Promise<boolean> =>
+		await this.#searchByField(this.dbFieldsName.USER_ID, id);
 
 
-	};
+	searchTokenWithRefreshToken = async (token: string): Promise<boolean> =>
+		await this.#searchByField(this.dbFieldsName.REFRESH_TOKEN, token);
 
-	searchTokenWithRefreshToken = async (field: string): Promise<boolean> => {
-		const fieldName = this.dbFieldsName.REFRESH_TOKEN;
-		// try {
-		return await this.#searchByField(fieldName, field);
-
-		// } catch (error) {
-		// 	console.log('searchToken');
-		// 	console.log(error);
-
-		// }
-
-
-	};
 
 	updateToken: updateOrCreateTokenType = async (userId, refreshToken) => {
 		const names = this.dbFieldsName;
-		// try {
 		const upToken: QueryResult<SQLTokenModel> =
 			await this.db.query(this.updateDataByElement(names.REFRESH_TOKEN, names.USER_ID, true), [refreshToken, userId]);
 		return upToken.rows[0];
-		// } catch (error) {
-		// 	console.log('updateToken');
-		// 	console.log(error);
-		// }
-
-
 	};
 	createToken: updateOrCreateTokenType = async (userId, refreshToken) => {
 		const names = this.dbFieldsName;
-		// try {
 		const createToken: QueryResult<SQLTokenModel> =
 			await this.db.query(this.addData([names.REFRESH_TOKEN, names.USER_ID]), [refreshToken, userId]);
 		return createToken.rows[0];
-
-		// } catch (error) {
-		// 	console.log('createToken');
-		// 	console.log(error);
-		// }
-
 	};
 
 	deleteToken = async (refreshToken: string): Promise<SQLTokenModel> => {
+
 		const fieldName = this.dbFieldsName.REFRESH_TOKEN;
-		// try {
 		const getDeletedToken: QueryResult<SQLTokenModel> =
 			await this.db.query(this.selectDataByElement(fieldName), [refreshToken]);
 
@@ -89,12 +55,6 @@ class TokenRepositoty extends SQLQuerys {
 			await this.db.query(this.deleteData(fieldName), [refreshToken]);
 
 		return getDeletedToken.rows[0];
-
-		// } catch (error) {
-		// 	console.log('deleteToken');
-		// 	console.log(error);
-		// }
-
 	};
 
 }
