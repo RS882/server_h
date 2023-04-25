@@ -1,38 +1,34 @@
 import { Pool, QueryResult } from "pg";
 import { db } from "../../../db/db";
-
 import { SQLTokenModel } from "../Models/SQLModels/SQLTokenModel";
-import { updateOrCreateTokenType } from "./TokenRespository";
+import { ITokenRepositoty, updateOrCreateTokenType } from "./TokenRespository";
+import { SQLQuerys } from "../../../PosgresqlQuery/querys";
+import { fieldsNameOfTokenTable } from "../DBFildsName/tokenTable";
 
 
 
-
-class TokenRepositoty {
+class TokenRepositoty extends SQLQuerys {
 	db: Pool;
-	query: {
-		searchTokenText: string;
-		updateTokeText: string;
-		createToken: string;
-		deleteTokenText: string;
-		getTokenText: string;
-		searchTokenWithRefreshTokenText: string;
-	}
-	constructor(dbSql: Pool) {
+	dbFieldsName: typeof fieldsNameOfTokenTable;
+
+	constructor(dbSql: Pool, dbName: typeof fieldsNameOfTokenTable) {
+		super(`token`);
 		this.db = dbSql;
-		this.query = {
-			searchTokenText: `SELECT EXISTS (SELECT * FROM token WHERE user_id = $1);`,
-			updateTokeText: `UPDATE token set refresh_token = $1 where user_id  = $2 RETURNING *;`,
-			createToken: `INSERT INTO token(refresh_token, user_id) values ($1, $2) RETURNING *;`,
-			deleteTokenText: `DELETE FROM token  where refresh_token = $1 RETURNING *;`,
-			getTokenText: `SELECT * FROM token WHERE refresh_token = $1;`,
-			searchTokenWithRefreshTokenText: `SELECT EXISTS (SELECT * FROM token WHERE refresh_token = $1);`,
-		}
+		this.dbFieldsName = dbName;
 	};
 
-	searchToken = async (user_id: number): Promise<boolean> => {
-		// try {
-		const isTokenFound: QueryResult<{ exists: boolean }> = await this.db.query(this.query.searchTokenText, [user_id]);
+	#searchByField = async <T>(nameOfField: string, fieldValue: T): Promise<boolean> => {
+		const isTokenFound: QueryResult<{ exists: boolean }> =
+			await this.db.query(this.foundDataByElement(nameOfField), [fieldValue]);
 		return isTokenFound.rows[0].exists;
+	};
+
+
+	searchToken = async (field: number): Promise<boolean> => {
+		const fieldName = this.dbFieldsName.USER_ID;
+		// try {
+		return await this.#searchByField(fieldName, field);
+
 		// } catch (error) {
 		// 	console.log('searchToken');
 		// 	console.log(error);
@@ -42,11 +38,11 @@ class TokenRepositoty {
 
 	};
 
-	searchTokenWithRefreshToken = async (refreshToken: string): Promise<boolean> => {
+	searchTokenWithRefreshToken = async (field: string): Promise<boolean> => {
+		const fieldName = this.dbFieldsName.REFRESH_TOKEN;
 		// try {
-		const isTokenFound: QueryResult<{ exists: boolean }> =
-			await this.db.query(this.query.searchTokenWithRefreshTokenText, [refreshToken]);
-		return isTokenFound.rows[0].exists;
+		return await this.#searchByField(fieldName, field);
+
 		// } catch (error) {
 		// 	console.log('searchToken');
 		// 	console.log(error);
@@ -57,8 +53,10 @@ class TokenRepositoty {
 	};
 
 	updateToken: updateOrCreateTokenType = async (userId, refreshToken) => {
+		const names = this.dbFieldsName;
 		// try {
-		const upToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.updateTokeText, [refreshToken, userId]);
+		const upToken: QueryResult<SQLTokenModel> =
+			await this.db.query(this.updateDataByElement(names.REFRESH_TOKEN, names.USER_ID, true), [refreshToken, userId]);
 		return upToken.rows[0];
 		// } catch (error) {
 		// 	console.log('updateToken');
@@ -68,8 +66,10 @@ class TokenRepositoty {
 
 	};
 	createToken: updateOrCreateTokenType = async (userId, refreshToken) => {
+		const names = this.dbFieldsName;
 		// try {
-		const createToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.createToken, [refreshToken, userId]);
+		const createToken: QueryResult<SQLTokenModel> =
+			await this.db.query(this.addData([names.REFRESH_TOKEN, names.USER_ID]), [refreshToken, userId]);
 		return createToken.rows[0];
 
 		// } catch (error) {
@@ -80,11 +80,14 @@ class TokenRepositoty {
 	};
 
 	deleteToken = async (refreshToken: string): Promise<SQLTokenModel> => {
-
+		const fieldName = this.dbFieldsName.REFRESH_TOKEN;
 		// try {
-		const getDeletedToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.getTokenText, [refreshToken]);
+		const getDeletedToken: QueryResult<SQLTokenModel> =
+			await this.db.query(this.selectDataByElement(fieldName), [refreshToken]);
 
-		const deleteToken: QueryResult<SQLTokenModel> = await this.db.query(this.query.deleteTokenText, [refreshToken]);
+		const deleteToken: QueryResult<SQLTokenModel> =
+			await this.db.query(this.deleteData(fieldName), [refreshToken]);
+
 		return getDeletedToken.rows[0];
 
 		// } catch (error) {
@@ -96,6 +99,6 @@ class TokenRepositoty {
 
 }
 
-export const tokenRepositoty = new TokenRepositoty(db);
+export const tokenRepositoty = new TokenRepositoty(db, fieldsNameOfTokenTable);
 
 

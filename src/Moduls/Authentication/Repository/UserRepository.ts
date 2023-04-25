@@ -3,6 +3,7 @@ import { db } from "../../../db/db";
 import { UserAuthModel } from "../Models/UserAuthModel";
 
 import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
+import { SQLQuerys } from "../../../PosgresqlQuery/querys";
 
 
 class UserRepositoty {
@@ -22,7 +23,7 @@ class UserRepositoty {
 			searchUserDataText: `SELECT EXISTS (SELECT * FROM user_auth WHERE email = $1);`,
 			insertUserData: `INSERT INTO user_auth(email, pasword, activation_link) values ($1,$2,$3) RETURNING *;`,
 			searchAktivationLinkText: `SELECT EXISTS (SELECT * FROM user_auth WHERE activation_link = $1) ;`,
-			setActivationTruetext: `UPDATE user_auth SET is_activated = true WHERE activation_link = $1;`,
+			setActivationTruetext: `UPDATE user_auth SET is_activated = $1 WHERE activation_link = $2;`,
 			getUserDataText: `SELECT * FROM user_auth WHERE email = $1`,
 			getUserDataByIdText: `SELECT * FROM user_auth WHERE id = $1`,
 			getAllUsersText: `SELECT * FROM user_auth ;`
@@ -73,7 +74,7 @@ class UserRepositoty {
 
 	setUserActivationTrue = async (aktivationLink: string): Promise<void> => {
 		// try {
-		const setActivation = await this.db.query(this.query.setActivationTruetext, [aktivationLink]);
+		const setActivation = await this.db.query(this.query.setActivationTruetext, [true, aktivationLink]);
 
 		// } catch (error) {
 		// 	console.log('setActivation');

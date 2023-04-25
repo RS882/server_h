@@ -4,3 +4,7 @@ import { SQLTokenModel } from "../Models/SQLModels/SQLTokenModel";
 
 export type updateOrCreateTokenType =
 	(userId: number, refreshToken: string) => Promise<SQLTokenModel>;
+
+export interface ITokenRepositoty {
+
+}
