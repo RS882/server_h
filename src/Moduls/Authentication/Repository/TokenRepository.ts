@@ -4,6 +4,7 @@ import { SQLTokenModel } from "../Models/SQLModels/SQLTokenModel";
 import { ITokenRepositoty, updateOrCreateTokenType } from "./TokenRespository";
 import { SQLQuerys } from "../../../PosgresqlQuery/querys";
 import { fieldsNameOfTokenTable } from "../DBFildsName/tokenTable";
+import { env } from "process";
 
 
 
@@ -12,7 +13,7 @@ class TokenRepositoty extends SQLQuerys {
 	dbFieldsName: typeof fieldsNameOfTokenTable;
 
 	constructor(dbSql: Pool, dbName: typeof fieldsNameOfTokenTable) {
-		super(`token`);
+		super(env.TOKEN_DB_NAME!);
 		this.db = dbSql;
 		this.dbFieldsName = dbName;
 	};

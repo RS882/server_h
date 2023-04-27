@@ -5,6 +5,7 @@ import { SQLUserAuthModel } from "../Models/SQLModels/SQLUsweAuthModel";
 import { SQLQuerys } from "../../../PosgresqlQuery/querys";
 
 import { fieldsNameOfUserAuthTable } from "../DBFildsName/user_auth";
+import { env } from "process";
 
 
 class UserRepositoty extends SQLQuerys {
@@ -12,7 +13,7 @@ class UserRepositoty extends SQLQuerys {
 	dbFieldsName: typeof fieldsNameOfUserAuthTable;
 
 	constructor(dbSql: Pool, dbName: typeof fieldsNameOfUserAuthTable) {
-		super(`user_auth`);
+		super(env.USER_AUTH_DB_NAME!);
 		this.db = dbSql;
 		this.dbFieldsName = dbName;
 	};
