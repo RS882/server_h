@@ -6,15 +6,18 @@ import { HTTP_STATUSES } from "../../../../HTTP_Status/HTTP_Status";
 import { APIRequestCallModel } from '../../Models/APIModels/APIRequestCallModel';
 import { QueryResult } from 'pg';
 import { SQLRequestCallIdModel } from '../../Models/SQLModels/SQLRequestCallIdModel';
+import { env } from "process";
 
 
 
 describe('/request_call', () => {
 
+	const requestcallDbName = env.REQUEST_CALL_DB_NAME!;
+
 	beforeAll(async () => {
 
 		const cleateTestDb = await db.query(
-			`create TABLE request_call(
+			`create TABLE ${requestcallDbName}(
 				id SERIAL PRIMARY KEY,
 				user_name VARCHAR(255),
 				tel_number VARCHAR(12),
@@ -23,9 +26,13 @@ describe('/request_call', () => {
 	});
 
 	afterAll(async () => {
-		const delTestDb = await db.query(`DROP TABLE IF EXISTS request_call;`);
+		const delTestDb = await db.query(`DROP TABLE IF EXISTS ${requestcallDbName};`);
 
 	});
+
+	afterEach(async () => {
+		const cleareDb = await db.query(`TRUNCATE ${requestcallDbName};`);
+	})
 	//========================================
 	const postAndGetTestData = async (testData: APIRequestCallModel) => {
 		await request(app)
@@ -45,7 +52,7 @@ describe('/request_call', () => {
 			phoneNumber: '012345678901',
 		};
 		const addTestDataToDb =
-			await db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
+			await db.query(`INSERT INTO ${requestcallDbName}(user_name, tel_number, is_not_processed)
 			 values ($1, $2,true) ;`, [testData.userName, testData.phoneNumber]);
 		const getData = await request(app)
 			.get('/request_call')
@@ -55,7 +62,7 @@ describe('/request_call', () => {
 			id: expect.any(Number),
 			...testData,
 		}])
-		const cleareDb = await db.query(`TRUNCATE request_call;`);
+
 
 	});
 
@@ -77,7 +84,7 @@ describe('/request_call', () => {
 			phoneNumber: '012345678901',
 		};
 		const addTestDataToDb: QueryResult<SQLRequestCallIdModel> =
-			await db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
+			await db.query(`INSERT INTO ${requestcallDbName}(user_name, tel_number, is_not_processed)
 			 values ($1, $2,true) RETURNING id;`, [testData.userName, testData.phoneNumber]);
 		const createdDataId = addTestDataToDb.rows[0].id;
 		const getData = await request(app)
@@ -88,7 +95,7 @@ describe('/request_call', () => {
 			id: createdDataId,
 			...testData,
 		})
-		const cleareDb = await db.query(`TRUNCATE request_call;`);
+
 
 	});
 	it('PUT: should return 405 when PUT used ', async () => {
@@ -129,7 +136,7 @@ describe('/request_call', () => {
 			.expect(HTTP_STATUSES.CREATED_201);
 		const createdDataBody = createData.body;
 		expect(createdDataBody).toEqual({ ...testData, })
-		const cleareDb = await db.query(`TRUNCATE request_call;`);
+
 	});
 
 	it('POST: should return 500 if it is not possible to create a record on the server', async () => {
@@ -140,7 +147,7 @@ describe('/request_call', () => {
 			.send(testData)
 			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 		const cleateTestDb = await db.query(
-			`create TABLE request_call(
+			`create TABLE ${requestcallDbName}(
 					id SERIAL PRIMARY KEY,
 					user_name VARCHAR(255),
 					tel_number VARCHAR(12),
@@ -163,13 +170,13 @@ describe('/request_call', () => {
 			phoneNumber: '012345678901',
 		};
 		const addTestDataToDb: QueryResult<SQLRequestCallIdModel> =
-			await db.query(`INSERT INTO request_call(user_name, tel_number, is_not_processed)
+			await db.query(`INSERT INTO ${requestcallDbName}(user_name, tel_number, is_not_processed)
 			 values ($1, $2,true) RETURNING id;`, [testData.userName, testData.phoneNumber]);
 		const createdDataId = addTestDataToDb.rows[0].id;
 		const deleteData = await request(app)
 			.delete(`/request_call/${createdDataId}`)
 			.expect(HTTP_STATUSES.NO_CONTENT_204);
-		const cleareDb = await db.query(`TRUNCATE request_call;`);
+
 	});
 
 });

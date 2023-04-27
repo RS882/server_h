@@ -11,11 +11,10 @@ export class APIError extends Error implements APIErrorModel {
 		this.status = status;
 		this.errors = errors;
 	};
-	static UnauthorizedError() {
-		return new APIError(HTTP_STATUSES.UNAUTHORIZED_401, errorMessage.USER_UNAUTHORIZED);
-	};
-	static BadRequest(message: string, errors: any = []) {
+	static UnauthorizedError = () => new APIError(HTTP_STATUSES.UNAUTHORIZED_401, errorMessage.USER_UNAUTHORIZED);
+	static BadRequest = (message: string, errors: any = []) => {
 		return new APIError(HTTP_STATUSES.BAD_REQUEST_400, message, errors);
 	};
+	static NotFound = () => new APIError(HTTP_STATUSES.NOT_FOUND_404, errorMessage.NOT_FOUND);
 
 }

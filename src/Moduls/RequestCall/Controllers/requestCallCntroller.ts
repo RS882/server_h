@@ -8,6 +8,7 @@ import { APINotAllowMethodModel } from "../../../models/APIModels/APINotAllowMet
 
 import { requestCallService } from "../Services/requestCallService";
 import { URIParamsRequestCallIdModel } from './../Models/URIParamsUserIdModel';
+import { validationResult } from "express-validator";
 
 
 class RequestCallController {
@@ -16,7 +17,9 @@ class RequestCallController {
 	get = async (req: RequestWithParams<URIParamsRequestCallIdModel>,
 		res: Response<APIRequestCallModel[] | APIRequestCallModel>) => {
 		try {
+
 			const foundRequestCall = await requestCallService.get(req.params);
+
 			if (!foundRequestCall || foundRequestCall.length === 0) {
 				res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 				return;
@@ -38,13 +41,12 @@ class RequestCallController {
 	post = async (req: RequestWithBody<APIRequestCallModel>,
 		res: Response<APIRequestCallModel>) => {
 		try {
-
-			if (!req.body.userName ||
-				req.body.userName!.split('').filter((e: string) => e !== ' ').length <= 0 ||
-				!isFormatedTelNumberCorrect(req.body.phoneNumber)) {
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
 				res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
 				return;
-			};
+			}
+
 			const savedRequestCall = await requestCallService.post(req.body);
 			if (!savedRequestCall || savedRequestCall.length === 0) {
 				res.sendStatus(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);

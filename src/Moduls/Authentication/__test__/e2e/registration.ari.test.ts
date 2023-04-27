@@ -6,14 +6,18 @@ import { errorMessage } from "../../../../ErrorMessage/errorMessage";
 import { APIUserModel } from "../../Models/APIModels/APIUserRegModel";
 import { db } from "../../../../db/db";
 import { UserDTOModel } from "../../Models/UserDTOModel";
+import { env } from "process";
 
 
 
 describe('/auth', () => {
 
+	const tokenDbName = env.TOKEN_DB_NAME!;
+	const userAuthDbName = env.USER_AUTH_DB_NAME!;
+
 	beforeAll(async () => {
 		const createUserAuthTestTab = await db.query(
-			`CREATE TABLE user_auth(
+			`CREATE TABLE ${userAuthDbName}(
 				id SERIAL PRIMARY KEY,
 				email VARCHAR(255) UNIQUE NOT NULL,
 				pasword VARCHAR(255) NOT NULL,
@@ -23,22 +27,22 @@ describe('/auth', () => {
 		);
 
 		const createTokenTestTab = await db.query(
-			`CREATE TABLE token(
+			`CREATE TABLE ${tokenDbName}(
 				id SERIAL PRIMARY KEY,
 				refresh_token VARCHAR(500) NOT NULL,
 				user_ip_aderss VARCHAR(255),
 				user_id integer,
-				FOREIGN KEY (user_id) REFERENCES user_auth(id) ON DELETE CASCADE
+				FOREIGN KEY (user_id) REFERENCES ${userAuthDbName}(id) ON DELETE CASCADE
 			);`
 		);
 	});
 
 	afterAll(async () => {
-		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
-		const delTokenTestTab = await db.query(`DROP TABLE IF EXISTS token;`);
+		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS ${userAuthDbName} cascade;`);
+		const delTokenTestTab = await db.query(`DROP TABLE IF EXISTS ${tokenDbName};`);
 	});
 	afterEach(async () => {
-		const delTestData = await db.query(`TRUNCATE  user_auth CASCADE;`);
+		const delTestData = await db.query(`TRUNCATE ${userAuthDbName} CASCADE;`);
 	});
 
 
@@ -282,7 +286,7 @@ describe('/auth', () => {
 				.send(testData)
 				.expect(HTTP_STATUSES.CREATED_201);
 
-			const delTestTokenData = await db.query(`TRUNCATE token CASCADE;`);
+			const delTestTokenData = await db.query(`TRUNCATE ${tokenDbName} CASCADE;`);
 
 			const refreshData = await request(app)
 				.get('/auth/refresh')
@@ -304,7 +308,7 @@ describe('/auth', () => {
 				.send(testData)
 				.expect(HTTP_STATUSES.CREATED_201);
 
-			const delTestTokenData = await db.query(`TRUNCATE token CASCADE;`);
+			const delTestTokenData = await db.query(`TRUNCATE ${tokenDbName} CASCADE;`);
 
 			const refreshData = await request(app)
 				.get('/auth/refresh')
@@ -338,7 +342,7 @@ describe('/auth', () => {
 		});
 
 	it('POST: should return 500  if some server error', async () => {
-		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS user_auth cascade;`);
+		const delUserAuthTestTab = await db.query(`DROP TABLE IF EXISTS ${userAuthDbName} cascade;`);
 
 		const testData: APIUserLoginModel = { userEmail: 'abc2@u7po.zt', userPassword: 'Tj28ii' };
 		await request(app)
@@ -347,7 +351,7 @@ describe('/auth', () => {
 			.expect(HTTP_STATUSES.INTERNAL_SERVER_ERROR_500);
 
 		const createUserAuthTestTab = await db.query(
-			`CREATE TABLE user_auth(
+			`CREATE TABLE ${userAuthDbName}(
 					id SERIAL PRIMARY KEY,
 					email VARCHAR(255) UNIQUE NOT NULL,
 					pasword VARCHAR(255) NOT NULL,

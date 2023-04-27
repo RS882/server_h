@@ -6,4 +6,5 @@ export const errorMessage = {
 	UNFORESEEN_ERROR: `An unforeseen error`,
 	USER_NOT_FOUND: `User is not found`,
 	INCORRECT_PASSWORD: `Incorrect password`,
+	NOT_FOUND: `Not found`,
 }
