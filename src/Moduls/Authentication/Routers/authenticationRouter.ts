@@ -18,6 +18,7 @@ export const getAuthRouter = () => {
 
 	const getEmailValidator = () => body('userEmail').isEmail();
 
+
 	authRouter.post('/registration',
 		getEmailValidator(),
 		getPasswordValidator(),
