@@ -41,6 +41,8 @@ INSERT INTO user_auth(email, pasword) values ('11','22');
 INSERT INTO user_auth(email, pasword) values ('22','33');
 INSERT INTO user_auth(email, pasword) values ('33','44');
 INSERT INTO user_auth(email, pasword) values ('44','55');
+
+ SELECT * FROM user_auth;
 -- /////////////////////////////////////
 
 DROP TABLE IF EXISTS tel_number_test;

@@ -10,7 +10,3 @@ export interface APIUserLoginModel {
 
 };
 
-// {
-// "userEmail": "werty@uw.com",
-// 	"userPassword": "12345"
-// }
