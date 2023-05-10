@@ -20,7 +20,7 @@ class TokenService implements ITokenService {
 
 	generateTokens: GenerateTokensType = (payload) => {
 		const date = new Date();
-		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '30s' });
+		const accessToken: string = jwt.sign({ ...payload, date: date }, env.JWT_ACCESS_SECRET!, { expiresIn: '12s' });
 		const refreshToken: string = jwt.sign({ ...payload, date: date }, env.JWT_REFRESH_SECRET!, { expiresIn: '30d' });
 		return { accessToken, refreshToken };
 	};

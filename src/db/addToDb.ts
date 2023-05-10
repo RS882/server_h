@@ -85,7 +85,7 @@ const CityList = [
 	"Kaiserslautern",
 ];
 
-const activeCityCount = [4, 8, 10, 20, 37];
+const activeCityCount = [2, 3, 15, 48, 12];
 
 export const addCityToSql = (cityArr = CityList, activeCity = activeCityCount) => {
 	cityArr.forEach(async (e, i) => {

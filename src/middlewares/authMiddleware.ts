@@ -20,6 +20,8 @@ const authMiddleware = async (req: RequestWithBody<SQLUserAuthModel>, res: Respo
 		next();
 
 	} catch (error) {
+		console.log('111');
+
 		return next(APIError.UnauthorizedError())
 	}
 

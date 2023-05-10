@@ -59,7 +59,10 @@ class UserAuthController implements IUserAuthController {
 	logout: ControllerMethod = async (req, res, next) => {
 		try {
 			const { refreshToken } = req.cookies;
+
 			const token: TokenModel = await userService.logout(refreshToken);
+
+
 			res.clearCookie('refreshToken');
 			res.status(HTTP_STATUSES.OK_200).json(token);
 			return;
