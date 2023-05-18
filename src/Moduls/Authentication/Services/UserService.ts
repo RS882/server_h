@@ -105,7 +105,7 @@ class UserService implements IUserService {
 		if (!refreshToken) throw APIError.UnauthorizedError();
 
 		const userDataAfterValidation = tokenService.validationRefreshToken(refreshToken);
-		console.log(userDataAfterValidation);
+		// console.log(userDataAfterValidation);
 
 		if (!userDataAfterValidation) throw APIError.UnauthorizedError();
 
